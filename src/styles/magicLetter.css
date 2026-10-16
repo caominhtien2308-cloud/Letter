@@ -1,0 +1,385 @@
+/* Khung cảnh 3D tổng thể của Giai đoạn 5 */
+.magic-letter-viewport {
+  position: absolute;
+  inset: 0;
+  z-index: 48;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1500px;
+  padding: max(16px, env(safe-area-inset-top, 16px)) max(12px, env(safe-area-inset-right, 12px)) max(18px, env(safe-area-inset-bottom, 18px)) max(12px, env(safe-area-inset-left, 12px));
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(24, 14, 52, 0.42) 0%,
+    rgba(7, 4, 18, 0.78) 100%
+  );
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), background 0.75s ease;
+}
+
+/* Khi sang Giai đoạn 6 (Pháo hoa dừa xanh), thu nhỏ nhẹ lá thư ở trung tâm để nhường bố cục cho pháo hoa */
+.magic-letter-viewport.is-celebrating-mode {
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(24, 14, 52, 0.18) 0%,
+    rgba(7, 4, 18, 0.45) 100%
+  );
+  pointer-events: none;
+}
+
+.magic-letter-viewport.is-celebrating-mode .letter-3d-rig {
+  transform: scale(0.88) translateY(-18px) !important;
+  transition: transform 0.8s ease;
+}
+
+.letter-3d-rig {
+  position: relative;
+  width: min(600px, 94vw);
+  height: min(650px, 90vh, 90dvh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* ================= CẤU TRÚC VỎ PHONG THƯ 3D ================= */
+.envelope-shell-3d {
+  position: absolute;
+  width: min(440px, 88vw);
+  height: min(280px, 56vw);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.75))
+          drop-shadow(0 0 28px rgba(255, 213, 79, 0.48));
+}
+
+/* Mặt lưng phong thư (z-index: 1) */
+.envelope-back-plate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #c2954e 0%, #8f6426 100%);
+  border: 2px solid #ffe082;
+  box-shadow: inset 0 0 35px rgba(46, 25, 5, 0.75);
+}
+
+/* Ánh sáng phép thuật phát ra từ bên trong túi thư (z-index: 2) */
+.envelope-inner-magic-glow {
+  position: absolute;
+  top: -30%;
+  left: 10%;
+  width: 80%;
+  height: 90%;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 251, 214, 0.95) 0%,
+    rgba(255, 202, 40, 0.55) 45%,
+    rgba(255, 152, 0, 0) 75%
+  );
+  filter: blur(12px);
+}
+
+/* Túi trước của phong thư (z-index: 4 - Che tờ giấy khi tờ giấy đang được rút lên) */
+.envelope-pocket-front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: 10px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pocket-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Nắp phong thư lật 3D quanh bản lề trên */
+.envelope-top-flap-3d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 59%;
+  z-index: 6;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.flap-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flap-outer-face {
+  transform: rotateX(0deg);
+}
+
+/* Mặt trong nắp thư được lật 180 độ để hiển thị đúng khi nắp mở lên */
+.flap-inner-face {
+  transform: rotateX(180deg);
+}
+
+.flap-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Dây vàng buộc chéo */
+.golden-cords-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 7;
+  pointer-events: none;
+}
+
+/* Con dấu sáp xanh lam thiên văn & Hạt bụi vàng (z-index: 8) */
+.wax-seal-anchor {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 96px;
+  height: 96px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.celestial-wax-seal-3d {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.72));
+}
+
+.wax-seal-detail-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.seal-sparks-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seal-spark-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #ffe082 55%, #ff8f00 100%);
+  box-shadow: 0 0 12px #ffd54f;
+  opacity: 0;
+}
+
+/* ================= TỜ GIẤY THƯ & NẾP GẤP 3D ================= */
+.letter-sheet-carrier {
+  position: relative;
+  width: min(540px, 92vw);
+  max-height: 82vh;
+  max-height: 82dvh;
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+}
+
+.parchment-paper-card {
+  position: relative;
+  width: 100%;
+  max-height: 82vh;
+  max-height: 82dvh;
+  background:
+    radial-gradient(circle at 50% 35%, #fffef9 0%, #fbf0d9 62%, #edd6ad 100%);
+  border-radius: 12px;
+  box-shadow:
+    0 25px 65px rgba(0, 0, 0, 0.78),
+    0 0 38px rgba(255, 224, 130, 0.48),
+    inset 0 0 42px rgba(184, 134, 11, 0.18);
+  padding: clamp(12px, 2.5vw, 20px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  transform-style: preserve-3d;
+}
+
+/* Hiệu ứng 2 nếp gấp giấy 3D lúc vừa rút ra khỏi phong thư */
+.paper-fold-panel {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 36px;
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.18), transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.top-fold-wing {
+  top: 0;
+  transform-origin: top center;
+}
+
+.bottom-fold-wing {
+  bottom: 0;
+  transform-origin: bottom center;
+}
+
+/* Khung viền trang trí hoa văn tinh tế bên trong tờ giấy */
+.parchment-ornate-frame {
+  position: relative;
+  border: 2px double rgba(161, 98, 7, 0.65);
+  border-radius: 8px;
+  padding: clamp(14px, 3.5vw, 34px);
+  background: rgba(255, 253, 245, 0.55);
+}
+
+.corner-ornament {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #b45309;
+  pointer-events: none;
+}
+
+.corner-ornament.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+.corner-ornament.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
+.corner-ornament.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
+.corner-ornament.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+.letter-crest-header {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #854d0e;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(180, 83, 9, 0.25);
+}
+
+.letter-scroll-body {
+  font-family: 'Lora', serif;
+  font-size: clamp(0.94rem, 2.05vw, 1.08rem);
+  line-height: 1.72;
+  color: #2c1810;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.letter-paragraph {
+  margin-bottom: 13px;
+  text-align: justify;
+}
+
+.letter-signature-line {
+  margin-top: 20px;
+  text-align: right;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  font-weight: 700;
+  color: #7c2d12;
+}
+
+/* Nút xác nhận "Đã đọc thư" */
+.letter-action-footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-read-luxury-btn {
+  position: relative;
+  padding: 12px 38px;
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1.8px solid #b45309;
+  background: linear-gradient(135deg, #fffbeb 0%, #fde68a 55%, #f59e0b 100%);
+  color: #3b1704;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.22rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: 0 6px 18px rgba(180, 83, 9, 0.25);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  touch-action: manipulation;
+}
+
+.confirm-read-luxury-btn.is-interactive {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.confirm-read-luxury-btn.is-interactive:hover,
+.confirm-read-luxury-btn.is-interactive:focus-visible {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 26px rgba(217, 119, 6, 0.45), 0 0 22px rgba(253, 224, 71, 0.85);
+  outline: none;
+}
+
+.confirm-read-luxury-btn.is-interactive:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Tối ưu thanh cuộn mềm mại trên điện thoại nếu nội dung dài */
+.parchment-paper-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.parchment-paper-card::-webkit-scrollbar-thumb {
+  background: rgba(180, 83, 9, 0.35);
+  border-radius: 999px;
+}
+
+/* ================= RESPONSIVE CHO MOBILE ================= */
+@media (max-width: 768px) {
+  .envelope-shell-3d {
+    width: min(340px, 90vw);
+    height: min(220px, 58vw);
+  }
+
+  .parchment-ornate-frame {
+    padding: 14px 12px;
+  }
+
+  .letter-crest-header {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  .letter-scroll-body {
+    font-size: 0.92rem;
+    line-height: 1.62;
+  }
+
+  .letter-paragraph {
+    margin-bottom: 9px;
+  }
+
+  .letter-signature-line {
+    margin-top: 14px;
+    font-size: 1.35rem;
+  }
+
+  .confirm-read-luxury-btn {
+    padding: 11px 32px;
+    font-size: 1.08rem;
+    min-height: 48px;
+  }
+}

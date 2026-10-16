@@ -1,0 +1,1161 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    min-height: -webkit-fill-available;
+    overflow: hidden;
+    background-color: #050314;
+    font-family: 'Lora', serif;
+    color: #fff8eb;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+}
+
+.magical-story-viewport {
+    position: relative;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: -webkit-fill-available;
+    overflow: hidden;
+}
+
+/* Nút âm thanh góc phải trên - an toàn với tai thỏ / Dynamic Island */
+.sound-toggle-pill {
+    position: fixed;
+    top: max(14px, env(safe-area-inset-top, 14px));
+    right: max(14px, env(safe-area-inset-right, 14px));
+    z-index: 100;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 224, 130, 0.55);
+    background: rgba(15, 11, 38, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffecb3;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    touch-action: manipulation;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.sound-toggle-pill:hover,
+.sound-toggle-pill:focus-visible {
+    background: rgba(255, 193, 7, 0.28);
+    box-shadow: 0 0 15px rgba(255, 213, 79, 0.5);
+    outline: none;
+}
+
+/* ================= GIAI ĐOẠN 1: THIÊN HÀ & XUYÊN MÂY ================= */
+.galaxy-stage-wrapper {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    background: radial-gradient(circle at center, #1b0a3a 0%, #050212 100%);
+}
+
+.webgl-canvas-mount {
+    width: 100%;
+    height: 100%;
+}
+
+.cloud-descent-layer {
+    position: absolute;
+    inset: -15%;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(255, 243, 209, 0.92) 0%, rgba(255, 174, 82, 0.65) 45%, transparent 75%);
+    filter: blur(22px);
+}
+
+.warm-sunset-transition-veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(180deg, #ff9e44 0%, #ffd584 55%, #689f38 100%);
+}
+
+.galaxy-caption {
+    position: absolute;
+    bottom: max(32px, env(safe-area-inset-bottom, 32px));
+    width: 100%;
+    padding: 0 20px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3.8vw, 1.25rem);
+    letter-spacing: 0.04em;
+    color: rgba(255, 240, 200, 0.9);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+    pointer-events: none;
+}
+
+/* ================= GIAI ĐOẠN 2: SÔNG NƯỚC ĐỒNG THÁP ================= */
+.dong-thap-scene {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    overflow: hidden;
+    animation: sceneFadeIn 1.2s ease-out forwards;
+}
+
+@keyframes sceneFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.04);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.sunset-sky-backdrop {
+    position: absolute;
+    inset: 0;
+    height: 55%;
+    background: linear-gradient(180deg, #3b2459 0%, #9b4568 28%, #f08543 66%, #ffdf85 100%);
+}
+
+.sunset-sun-orb {
+    position: absolute;
+    left: 50%;
+    bottom: 14%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fffbeb 0%, #ffd54f 50%, rgba(255, 152, 0, 0) 75%);
+    filter: blur(2px);
+}
+
+.drifting-cloud {
+    position: absolute;
+    background: rgba(255, 230, 180, 0.45);
+    border-radius: 999px;
+    filter: blur(12px);
+    pointer-events: none;
+}
+
+.cloud-1 {
+    width: 220px;
+    height: 40px;
+    top: 25%;
+    left: 12%;
+    animation: driftClouds 28s ease-in-out infinite alternate;
+}
+
+.cloud-2 {
+    width: 300px;
+    height: 50px;
+    top: 40%;
+    right: 15%;
+    animation: driftClouds 34s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes driftClouds {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(40px);
+    }
+}
+
+.mekong-landscape-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.palm-crown {
+    animation: palmBreeze 4.8s ease-in-out infinite alternate;
+}
+
+.swaying-palms-left .palm-crown {
+    transform-origin: 135px 480px;
+}
+
+.swaying-palms-right .palm-crown {
+    transform-origin: 1270px 475px;
+}
+
+@keyframes palmBreeze {
+    0% {
+        transform: rotate(-2.5deg);
+    }
+
+    100% {
+        transform: rotate(3deg);
+    }
+}
+
+.water-shimmer-canvas {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 52%;
+    pointer-events: none;
+}
+
+.river-mist-overlay {
+    position: absolute;
+    left: 0;
+    bottom: 32%;
+    width: 100%;
+    height: 18%;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 224, 163, 0.24) 50%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Nhân vật người đàn ông câu cá */
+.fisherman-container {
+    position: absolute;
+    left: 7%;
+    bottom: 5%;
+    width: min(390px, 46vw);
+    z-index: 18;
+    pointer-events: none;
+    transition: left 0.3s ease, bottom 0.3s ease, width 0.3s ease;
+}
+
+.character-body-rig {
+    animation: gentleBreathing 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes gentleBreathing {
+    0% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(-3px);
+    }
+}
+
+/* ================= GIAI ĐOẠN 3: LỜI MỜI & THANH LỰC CÂU CÁ ================= */
+.fishing-ui-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 25;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: max(24px, env(safe-area-inset-top, 24px)) 16px max(24px, env(safe-area-inset-bottom, 24px));
+    pointer-events: none;
+}
+
+.invitation-banner {
+    text-align: center;
+    max-width: 680px;
+    width: 100%;
+    background: radial-gradient(circle, rgba(23, 14, 43, 0.72) 0%, rgba(23, 14, 43, 0.3) 70%, transparent 100%);
+    padding: 12px 20px;
+    border-radius: 20px;
+    animation: floatBanner 1s ease-out forwards;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+@keyframes floatBanner {
+    from {
+        opacity: 0;
+        transform: translateY(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.invitation-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4.2vw, 2.8rem);
+    font-weight: 700;
+    color: #fff6d6;
+    text-shadow: 0 0 18px rgba(255, 204, 102, 0.8), 0 2px 6px rgba(0, 0, 0, 0.75);
+    line-height: 1.25;
+}
+
+.invitation-subtitle {
+    margin-top: 6px;
+    font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+    color: #ffecb3;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+    line-height: 1.4;
+}
+
+/* Thanh đo lực câu cá dọc */
+.fantasy-meter-wrapper {
+    position: absolute;
+    right: max(16px, env(safe-area-inset-right, 16px));
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 30;
+}
+
+.meter-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    font-size: 0.9rem;
+    color: #ffe082;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.meter-track {
+    position: relative;
+    width: 34px;
+    height: min(280px, 44vh);
+    border-radius: 999px;
+    background: rgba(16, 12, 36, 0.72);
+    border: 2px solid rgba(255, 213, 79, 0.75);
+    box-shadow: 0 0 22px rgba(255, 193, 7, 0.35), inset 0 0 12px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+}
+
+.in-sweet-spot .meter-track {
+    border-color: #69f0ae;
+    box-shadow: 0 0 30px rgba(105, 240, 174, 0.85);
+}
+
+.meter-target-zone {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: rgba(105, 240, 174, 0.28);
+    border-top: 2px dashed #ffe57f;
+    border-bottom: 2px dashed #ffe57f;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.target-fish-svg {
+    width: 26px;
+    height: 18px;
+    filter: drop-shadow(0 0 6px #ffd54f);
+}
+
+.meter-fill-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(0deg, #26c6da 0%, #ffca28 65%, #ff7043 100%);
+    box-shadow: 0 0 16px rgba(255, 202, 40, 0.85);
+    z-index: 2;
+}
+
+.touch-controls-area {
+    pointer-events: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 4px;
+}
+
+.hold-cast-button {
+    position: relative;
+    padding: 16px 36px;
+    min-height: 54px;
+    width: auto;
+    max-width: min(380px, 92vw);
+    border-radius: 999px;
+    border: 2px solid #ffd54f;
+    background: linear-gradient(135deg, rgba(46, 26, 71, 0.92) 0%, rgba(92, 43, 81, 0.92) 100%);
+    color: #fff8e1;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.05rem, 3.8vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 213, 79, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hold-cast-button.is-charging {
+    transform: scale(0.96);
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    box-shadow: 0 0 32px rgba(251, 191, 36, 0.9);
+}
+
+.btn-glow-ring {
+    position: absolute;
+    inset: -3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ffd54f, #ffb300, #ff8f00, #ffd54f);
+    background-size: 300% 300%;
+    z-index: -1;
+    opacity: 0.6;
+    filter: blur(6px);
+    animation: glowRing 3s ease infinite;
+}
+
+@keyframes glowRing {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ================= GIAI ĐOẠN 4: CÁ -> KHỈ LÔNG VÀNG -> PHONG THƯ ================= */
+.transformation-stage-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.morph-actor {
+    position: absolute;
+    width: min(230px, 52vw);
+    height: min(230px, 52vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+}
+
+.custom-creature-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 18px rgba(255, 215, 64, 0.75));
+}
+
+.golden-magic-aura {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    opacity: 0;
+    background: radial-gradient(circle, #ffffff 0%, #ffe082 40%, rgba(255, 152, 0, 0) 72%);
+    box-shadow: 0 0 60px #ffd54f;
+}
+
+.water-splash-droplets {
+    position: absolute;
+    width: 240px;
+    height: 150px;
+}
+
+.glowing-envelope-box {
+    width: 220px;
+    height: 145px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 100%);
+    border: 2px solid #fff8e1;
+    box-shadow: 0 0 35px rgba(255, 215, 64, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wax-seal-blue-clock {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1e4e79 0%, #0d253f 100%);
+    border: 2px solid #ffd54f;
+}
+
+/* ================= GIAI ĐOẠN 5: PHONG THƯ ĐÓNG MỞ 3D & LÁ THƯ ================= */
+.magic-letter-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(16px, env(safe-area-inset-top, 16px)) max(12px, env(safe-area-inset-right, 12px)) max(18px, env(safe-area-inset-bottom, 18px)) max(12px, env(safe-area-inset-left, 12px));
+    background: radial-gradient(circle at center, rgba(16, 10, 38, 0.52) 0%, rgba(8, 5, 20, 0.82) 100%);
+    transition: transform 0.6s ease;
+}
+
+/* ================= GIAI ĐOẠN 5: PHONG THƯ ĐÓNG MỞ 3D & LÁ THƯ CỔ ================= */
+.magic-letter-viewport {
+    position: absolute;
+    inset: 0;
+    z-index: 48;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1500px;
+    padding: max(16px, env(safe-area-inset-top, 16px)) max(12px, env(safe-area-inset-right, 12px)) max(18px, env(safe-area-inset-bottom, 18px)) max(12px, env(safe-area-inset-left, 12px));
+    background: radial-gradient(
+        circle at 50% 45%,
+        rgba(24, 14, 52, 0.42) 0%,
+        rgba(7, 4, 18, 0.78) 100%
+    );
+    transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), background 0.75s ease;
+}
+
+.magic-letter-viewport.is-celebrating-mode {
+    background: radial-gradient(
+        circle at 50% 45%,
+        rgba(24, 14, 52, 0.18) 0%,
+        rgba(7, 4, 18, 0.45) 100%
+    );
+    pointer-events: none;
+}
+
+.magic-letter-viewport.is-celebrating-mode .letter-3d-rig {
+    transform: scale(0.88) translateY(-18px) !important;
+    transition: transform 0.8s ease;
+}
+
+.letter-3d-rig {
+    position: relative;
+    width: min(600px, 94vw);
+    height: min(650px, 90vh, 90dvh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-style: preserve-3d;
+}
+
+.envelope-shell-3d {
+    position: absolute;
+    width: min(440px, 88vw);
+    height: min(280px, 56vw);
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.75))
+            drop-shadow(0 0 28px rgba(255, 213, 79, 0.48));
+}
+
+.envelope-back-plate {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #c2954e 0%, #8f6426 100%);
+    border: 2px solid #ffe082;
+    box-shadow: inset 0 0 35px rgba(46, 25, 5, 0.75);
+}
+
+.envelope-inner-magic-glow {
+    position: absolute;
+    top: -30%;
+    left: 10%;
+    width: 80%;
+    height: 90%;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 251, 214, 0.95) 0%,
+        rgba(255, 202, 40, 0.55) 45%,
+        rgba(255, 152, 0, 0) 75%
+    );
+    filter: blur(12px);
+}
+
+.envelope-pocket-front {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: 10px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.pocket-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.envelope-top-flap-3d {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 59%;
+    z-index: 6;
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+
+.flap-face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.flap-outer-face {
+    transform: rotateX(0deg);
+}
+
+.flap-inner-face {
+    transform: rotateX(180deg);
+}
+
+.flap-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.golden-cords-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 7;
+    pointer-events: none;
+}
+
+.wax-seal-anchor {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 96px;
+    height: 96px;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.celestial-wax-seal-3d {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.72));
+}
+
+.wax-seal-detail-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.seal-sparks-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seal-spark-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #ffe082 55%, #ff8f00 100%);
+    box-shadow: 0 0 12px #ffd54f;
+    opacity: 0;
+}
+
+.letter-sheet-carrier {
+    position: relative;
+    width: min(540px, 92vw);
+    max-height: 82vh;
+    max-height: 82dvh;
+    transform-style: preserve-3d;
+    display: flex;
+    flex-direction: column;
+}
+
+.parchment-paper-card {
+    position: relative;
+    width: 100%;
+    max-height: 82vh;
+    max-height: 82dvh;
+    background: radial-gradient(circle at 50% 35%, #fffef9 0%, #fbf0d9 62%, #edd6ad 100%);
+    border-radius: 12px;
+    box-shadow:
+        0 25px 65px rgba(0, 0, 0, 0.78),
+        0 0 38px rgba(255, 224, 130, 0.48),
+        inset 0 0 42px rgba(184, 134, 11, 0.18);
+    padding: clamp(12px, 2.5vw, 20px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    transform-style: preserve-3d;
+}
+
+.paper-fold-panel {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.18), transparent);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.top-fold-wing {
+    top: 0;
+    transform-origin: top center;
+}
+
+.bottom-fold-wing {
+    bottom: 0;
+    transform-origin: bottom center;
+}
+
+.parchment-ornate-frame {
+    position: relative;
+    border: 2px double rgba(161, 98, 7, 0.65);
+    border-radius: 8px;
+    padding: clamp(14px, 3.5vw, 34px);
+    background: rgba(255, 253, 245, 0.55);
+}
+
+.corner-ornament {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #b45309;
+    pointer-events: none;
+}
+
+.corner-ornament.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+.corner-ornament.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
+.corner-ornament.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
+.corner-ornament.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+.letter-crest-header {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #854d0e;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(180, 83, 9, 0.25);
+}
+
+.letter-scroll-body {
+    font-family: 'Lora', serif;
+    font-size: clamp(0.94rem, 2.05vw, 1.08rem);
+    line-height: 1.72;
+    color: #2c1810;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.letter-paragraph {
+    margin-bottom: 13px;
+    text-align: justify;
+}
+
+.letter-signature-line {
+    margin-top: 20px;
+    text-align: right;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: #7c2d12;
+}
+
+.letter-action-footer {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.confirm-read-luxury-btn {
+    position: relative;
+    padding: 12px 38px;
+    min-height: 48px;
+    border-radius: 999px;
+    border: 1.8px solid #b45309;
+    background: linear-gradient(135deg, #fffbeb 0%, #fde68a 55%, #f59e0b 100%);
+    color: #3b1704;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.22rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: 0 6px 18px rgba(180, 83, 9, 0.25);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    touch-action: manipulation;
+}
+
+.confirm-read-luxury-btn.is-interactive {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.confirm-read-luxury-btn.is-interactive:hover,
+.confirm-read-luxury-btn.is-interactive:focus-visible {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 26px rgba(217, 119, 6, 0.45), 0 0 22px rgba(253, 224, 71, 0.85);
+    outline: none;
+}
+
+.confirm-read-luxury-btn.is-interactive:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.parchment-paper-card::-webkit-scrollbar {
+    width: 6px;
+}
+
+.parchment-paper-card::-webkit-scrollbar-thumb {
+    background: rgba(180, 83, 9, 0.35);
+    border-radius: 999px;
+}
+
+/* ================= GIAI ĐOẠN 6: DỪA XANH & PHÁO HOA ================= */
+.coconut-fireworks-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+}
+
+.fireworks-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.ending-celebration-modal {
+    position: absolute;
+    bottom: max(24px, env(safe-area-inset-bottom, 24px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(520px, 92vw);
+    text-align: center;
+    background: rgba(18, 12, 38, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 213, 79, 0.75);
+    border-radius: 20px;
+    padding: 22px 24px;
+    pointer-events: auto;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(255, 213, 79, 0.4);
+    animation: floatBanner 0.8s ease-out forwards;
+}
+
+.ending-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4.2vw, 2.1rem);
+    color: #ffe082;
+    margin-bottom: 8px;
+    line-height: 1.25;
+}
+
+.ending-subtitle {
+    font-size: 0.98rem;
+    color: #f3e5f5;
+    margin-bottom: 18px;
+    line-height: 1.4;
+}
+
+.restart-story-btn {
+    padding: 12px 28px;
+    min-height: 48px;
+    border-radius: 999px;
+    border: 1.5px solid #ffd54f;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.12rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    touch-action: manipulation;
+}
+
+.restart-story-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 22px rgba(251, 191, 36, 0.85);
+}
+
+/* ================= TỐI ƯU TOÀN DIỆN CHO ĐIỆN THOẠI & TABLET ================= */
+@media (max-width: 768px) {
+    .sound-toggle-pill {
+        top: max(12px, env(safe-area-inset-top, 12px));
+        right: max(12px, env(safe-area-inset-right, 12px));
+        padding: 6px 14px;
+        font-size: 0.88rem;
+        min-height: 38px;
+    }
+
+    .invitation-banner {
+        margin-top: 36px;
+        padding: 10px 16px;
+        border-radius: 16px;
+    }
+
+    .invitation-title {
+        font-size: clamp(1.22rem, 5vw, 1.7rem);
+    }
+
+    .invitation-subtitle {
+        font-size: clamp(0.82rem, 3.4vw, 0.95rem);
+        margin-top: 4px;
+    }
+
+    .fisherman-container {
+        left: 0;
+        bottom: 14%;
+        width: min(340px, 66vw);
+    }
+
+    .fantasy-meter-wrapper {
+        right: max(10px, env(safe-area-inset-right, 10px));
+        top: 46%;
+        gap: 5px;
+    }
+
+    .meter-track {
+        width: 28px;
+        height: min(250px, 35vh);
+    }
+
+    .meter-label {
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+    }
+
+    .target-fish-svg {
+        width: 22px;
+        height: 15px;
+    }
+
+    .touch-controls-area {
+        padding-bottom: max(6px, env(safe-area-inset-bottom, 6px));
+    }
+
+    .hold-cast-button {
+        width: calc(100vw - 36px);
+        max-width: 350px;
+        padding: 14px 22px;
+        font-size: 1.08rem;
+        min-height: 52px;
+    }
+
+    .morph-actor {
+        width: min(220px, 58vw);
+        height: min(220px, 58vw);
+    }
+
+    .envelope-3d-stage {
+        width: 96vw;
+    }
+
+    .envelope-back-body {
+        width: min(340px, 90vw);
+        height: 205px;
+    }
+
+    .envelope-top-flap {
+        height: 110px;
+    }
+
+    .celestial-wax-seal {
+        width: 64px;
+        height: 64px;
+    }
+
+    .parchment-letter-sheet {
+        width: 95vw;
+        max-height: min(82vh, 82dvh, 640px);
+        padding: 12px 10px;
+        border-radius: 12px;
+    }
+
+    .parchment-inner-border {
+        padding: 14px 12px;
+        border-width: 1.5px;
+    }
+
+    .mekong-floral-header {
+        font-size: 1.18rem;
+        margin-bottom: 8px;
+    }
+
+    .letter-body-content {
+        font-size: 0.94rem;
+        line-height: 1.62;
+    }
+
+    .letter-paragraph-item {
+        margin-bottom: 8px;
+    }
+
+    .letter-signature {
+        font-size: 1.35rem;
+        margin-top: 8px;
+        margin-bottom: 3px;
+    }
+
+    .confirm-read-btn {
+        padding: 11px 28px;
+        font-size: 1.08rem;
+        min-height: 48px;
+    }
+
+    .ending-celebration-modal {
+        width: 94vw;
+        padding: 18px 16px;
+        border-radius: 16px;
+        bottom: max(20px, env(safe-area-inset-bottom, 20px));
+    }
+
+    .ending-title {
+        font-size: clamp(1.22rem, 5vw, 1.65rem);
+    }
+
+    .ending-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .restart-story-btn {
+        padding: 11px 24px;
+        font-size: 1.02rem;
+        min-height: 48px;
+    }
+}
+
+/* Màn hình điện thoại nhỏ (iPhone SE, Galaxy A series, v.v. <= 400px) */
+@media (max-width: 400px) {
+    .sound-toggle-pill {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+
+    .invitation-banner {
+        margin-top: 32px;
+        padding: 8px 12px;
+    }
+
+    .invitation-title {
+        font-size: 1.18rem;
+    }
+
+    .fisherman-container {
+        bottom: 15%;
+        width: 72vw;
+    }
+
+    .fantasy-meter-wrapper {
+        right: 6px;
+    }
+
+    .meter-track {
+        width: 24px;
+        height: 32vh;
+    }
+
+    .hold-cast-button {
+        padding: 12px 18px;
+        font-size: 0.98rem;
+        min-height: 48px;
+    }
+
+    .parchment-inner-border {
+        padding: 10px 8px;
+    }
+
+    .letter-body-content {
+        font-size: 0.88rem;
+        line-height: 1.58;
+    }
+}
+
+/* Khi xoay ngang điện thoại (Landscape mobile: chiều cao <= 500px) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .fishing-ui-overlay {
+        padding: max(10px, env(safe-area-inset-top, 10px)) 16px max(10px, env(safe-area-inset-bottom, 10px));
+    }
+
+    .invitation-banner {
+        margin-top: 0;
+        padding: 6px 14px;
+    }
+
+    .invitation-title {
+        font-size: 1.15rem;
+    }
+
+    .invitation-subtitle {
+        display: none;
+    }
+
+    .fisherman-container {
+        bottom: 2%;
+        left: 4%;
+        width: 32vw;
+    }
+
+    .fantasy-meter-wrapper {
+        top: 48%;
+        right: max(14px, env(safe-area-inset-right, 14px));
+    }
+
+    .meter-track {
+        height: 45vh;
+        width: 24px;
+    }
+
+    .hold-cast-button {
+        padding: 8px 20px;
+        font-size: 0.95rem;
+        min-height: 40px;
+    }
+
+    .parchment-letter-sheet {
+        max-height: 88vh;
+        max-height: 88dvh;
+    }
+}

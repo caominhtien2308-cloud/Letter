@@ -1,0 +1,3234 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>The Magical Afternoon Letter — Lá Thư Buổi Chiều Huyền Ảo</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- CDN Libraries: React, ReactDOM, Three.js, GSAP, Babel Standalone -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.4/babel.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            min-height: -webkit-fill-available;
+            overflow: hidden;
+            background-color: #050314;
+            font-family: 'Lora', serif;
+            color: #fff8eb;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overscroll-behavior: none;
+        }
+
+        .magical-story-viewport {
+            position: relative;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            min-height: -webkit-fill-available;
+            overflow: hidden;
+        }
+
+        /* Nút âm thanh góc phải trên - an toàn với tai thỏ / Dynamic Island */
+        .sound-toggle-pill {
+            position: fixed;
+            top: max(14px, env(safe-area-inset-top, 14px));
+            right: max(14px, env(safe-area-inset-right, 14px));
+            z-index: 100;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 224, 130, 0.55);
+            background: rgba(15, 11, 38, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #ffecb3;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            touch-action: manipulation;
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .sound-toggle-pill:hover,
+        .sound-toggle-pill:focus-visible {
+            background: rgba(255, 193, 7, 0.28);
+            box-shadow: 0 0 15px rgba(255, 213, 79, 0.5);
+            outline: none;
+        }
+
+        /* ================= GIAI ĐOẠN 1: THIÊN HÀ & XUYÊN MÂY ================= */
+        .galaxy-stage-wrapper {
+            position: absolute;
+            inset: 0;
+            z-index: 40;
+            background: radial-gradient(circle at center, #1b0a3a 0%, #050212 100%);
+        }
+
+        .webgl-canvas-mount {
+            width: 100%;
+            height: 100%;
+        }
+
+        .cloud-descent-layer {
+            position: absolute;
+            inset: -15%;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(circle at 50% 45%, rgba(255, 243, 209, 0.92) 0%, rgba(255, 174, 82, 0.65) 45%, transparent 75%);
+            filter: blur(22px);
+        }
+
+        .warm-sunset-transition-veil {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            background: linear-gradient(180deg, #ff9e44 0%, #ffd584 55%, #689f38 100%);
+        }
+
+        .galaxy-caption {
+            position: absolute;
+            bottom: max(32px, env(safe-area-inset-bottom, 32px));
+            width: 100%;
+            padding: 0 20px;
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 3.8vw, 1.25rem);
+            letter-spacing: 0.04em;
+            color: rgba(255, 240, 200, 0.9);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+            pointer-events: none;
+        }
+
+        /* ================= GIAI ĐOẠN 2: SÔNG NƯỚC ĐỒNG THÁP ================= */
+        .dong-thap-scene {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            overflow: hidden;
+            animation: sceneFadeIn 1.2s ease-out forwards;
+        }
+
+        @keyframes sceneFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(1.04);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .sunset-sky-backdrop {
+            position: absolute;
+            inset: 0;
+            height: 55%;
+            background: linear-gradient(180deg, #3b2459 0%, #9b4568 28%, #f08543 66%, #ffdf85 100%);
+        }
+
+        .sunset-sun-orb {
+            position: absolute;
+            left: 50%;
+            bottom: 14%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fffbeb 0%, #ffd54f 50%, rgba(255, 152, 0, 0) 75%);
+            filter: blur(2px);
+        }
+
+        .drifting-cloud {
+            position: absolute;
+            background: rgba(255, 230, 180, 0.45);
+            border-radius: 999px;
+            filter: blur(12px);
+            pointer-events: none;
+        }
+
+        .cloud-1 {
+            width: 220px;
+            height: 40px;
+            top: 25%;
+            left: 12%;
+            animation: driftClouds 28s ease-in-out infinite alternate;
+        }
+
+        .cloud-2 {
+            width: 300px;
+            height: 50px;
+            top: 40%;
+            right: 15%;
+            animation: driftClouds 34s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes driftClouds {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(40px);
+            }
+        }
+
+        .mekong-landscape-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .palm-crown {
+            animation: palmBreeze 4.8s ease-in-out infinite alternate;
+        }
+
+        .swaying-palms-left .palm-crown {
+            transform-origin: 135px 480px;
+        }
+
+        .swaying-palms-right .palm-crown {
+            transform-origin: 1270px 475px;
+        }
+
+        @keyframes palmBreeze {
+            0% {
+                transform: rotate(-2.5deg);
+            }
+
+            100% {
+                transform: rotate(3deg);
+            }
+        }
+
+        .water-shimmer-canvas {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 52%;
+            pointer-events: none;
+        }
+
+        .river-mist-overlay {
+            position: absolute;
+            left: 0;
+            bottom: 32%;
+            width: 100%;
+            height: 18%;
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 224, 163, 0.24) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Nhân vật người đàn ông câu cá */
+        .fisherman-container {
+            position: absolute;
+            left: 7%;
+            bottom: 5%;
+            width: min(390px, 46vw);
+            z-index: 18;
+            pointer-events: none;
+            transition: left 0.3s ease, bottom 0.3s ease, width 0.3s ease;
+        }
+
+        .character-body-rig {
+            animation: gentleBreathing 3.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes gentleBreathing {
+            0% {
+                transform: translateY(0px);
+            }
+
+            100% {
+                transform: translateY(-3px);
+            }
+        }
+
+        /* ================= GIAI ĐOẠN 3: LỜI MỜI & THANH LỰC CÂU CÁ ================= */
+        .fishing-ui-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 25;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: max(24px, env(safe-area-inset-top, 24px)) 16px max(24px, env(safe-area-inset-bottom, 24px));
+            pointer-events: none;
+        }
+
+        .invitation-banner {
+            text-align: center;
+            max-width: 680px;
+            width: 100%;
+            background: radial-gradient(circle, rgba(23, 14, 43, 0.72) 0%, rgba(23, 14, 43, 0.3) 70%, transparent 100%);
+            padding: 12px 20px;
+            border-radius: 20px;
+            animation: floatBanner 1s ease-out forwards;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        @keyframes floatBanner {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .invitation-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 4.2vw, 2.8rem);
+            font-weight: 700;
+            color: #fff6d6;
+            text-shadow: 0 0 18px rgba(255, 204, 102, 0.8), 0 2px 6px rgba(0, 0, 0, 0.75);
+            line-height: 1.25;
+        }
+
+        .invitation-subtitle {
+            margin-top: 6px;
+            font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+            color: #ffecb3;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+            line-height: 1.4;
+        }
+
+        /* Thanh đo lực câu cá dọc */
+        .fantasy-meter-wrapper {
+            position: absolute;
+            right: max(16px, env(safe-area-inset-right, 16px));
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 30;
+        }
+
+        .meter-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            font-size: 0.9rem;
+            color: #ffe082;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .meter-track {
+            position: relative;
+            width: 34px;
+            height: min(280px, 44vh);
+            border-radius: 999px;
+            background: rgba(16, 12, 36, 0.72);
+            border: 2px solid rgba(255, 213, 79, 0.75);
+            box-shadow: 0 0 22px rgba(255, 193, 7, 0.35), inset 0 0 12px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        .in-sweet-spot .meter-track {
+            border-color: #69f0ae;
+            box-shadow: 0 0 30px rgba(105, 240, 174, 0.85);
+        }
+
+        .meter-target-zone {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: rgba(105, 240, 174, 0.28);
+            border-top: 2px dashed #ffe57f;
+            border-bottom: 2px dashed #ffe57f;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .target-fish-svg {
+            width: 26px;
+            height: 18px;
+            filter: drop-shadow(0 0 6px #ffd54f);
+        }
+
+        .meter-fill-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(0deg, #26c6da 0%, #ffca28 65%, #ff7043 100%);
+            box-shadow: 0 0 16px rgba(255, 202, 40, 0.85);
+            z-index: 2;
+        }
+
+        .touch-controls-area {
+            pointer-events: auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 4px;
+        }
+
+        .hold-cast-button {
+            position: relative;
+            padding: 16px 36px;
+            min-height: 54px;
+            width: auto;
+            max-width: min(380px, 92vw);
+            border-radius: 999px;
+            border: 2px solid #ffd54f;
+            background: linear-gradient(135deg, rgba(46, 26, 71, 0.92) 0%, rgba(92, 43, 81, 0.92) 100%);
+            color: #fff8e1;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.05rem, 3.8vw, 1.25rem);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 213, 79, 0.35);
+            transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hold-cast-button.is-charging {
+            transform: scale(0.96);
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            box-shadow: 0 0 32px rgba(251, 191, 36, 0.9);
+        }
+
+        .btn-glow-ring {
+            position: absolute;
+            inset: -3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #ffd54f, #ffb300, #ff8f00, #ffd54f);
+            background-size: 300% 300%;
+            z-index: -1;
+            opacity: 0.6;
+            filter: blur(6px);
+            animation: glowRing 3s ease infinite;
+        }
+
+        @keyframes glowRing {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* ================= GIAI ĐOẠN 4: CÁ -> KHỈ LÔNG VÀNG -> PHONG THƯ ================= */
+        .transformation-stage-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .morph-actor {
+            position: absolute;
+            width: min(230px, 52vw);
+            height: min(230px, 52vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+        }
+
+        .custom-creature-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 18px rgba(255, 215, 64, 0.75));
+        }
+
+        .golden-magic-aura {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            opacity: 0;
+            background: radial-gradient(circle, #ffffff 0%, #ffe082 40%, rgba(255, 152, 0, 0) 72%);
+            box-shadow: 0 0 60px #ffd54f;
+        }
+
+        .water-splash-droplets {
+            position: absolute;
+            width: 240px;
+            height: 150px;
+        }
+
+        .glowing-envelope-box {
+            width: 220px;
+            height: 145px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 100%);
+            border: 2px solid #fff8e1;
+            box-shadow: 0 0 35px rgba(255, 215, 64, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wax-seal-blue-clock {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #1e4e79 0%, #0d253f 100%);
+            border: 2px solid #ffd54f;
+        }
+
+        /* ================= GIAI ĐOẠN 5: PHONG THƯ ĐÓNG MỞ 3D & LÁ THƯ CỔ ================= */
+        .magic-letter-viewport {
+            position: absolute;
+            inset: 0;
+            z-index: 48;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1500px;
+            padding: max(16px, env(safe-area-inset-top, 16px)) max(12px, env(safe-area-inset-right, 12px)) max(18px, env(safe-area-inset-bottom, 18px)) max(12px, env(safe-area-inset-left, 12px));
+            background: radial-gradient(
+                circle at 50% 45%,
+                rgba(24, 14, 52, 0.42) 0%,
+                rgba(7, 4, 18, 0.78) 100%
+            );
+            transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), background 0.75s ease;
+        }
+
+        .magic-letter-viewport.is-celebrating-mode {
+            background: radial-gradient(
+                circle at 50% 45%,
+                rgba(24, 14, 52, 0.18) 0%,
+                rgba(7, 4, 18, 0.45) 100%
+            );
+            pointer-events: none;
+        }
+
+        .magic-letter-viewport.is-celebrating-mode .letter-3d-rig {
+            transform: scale(0.88) translateY(-18px) !important;
+            transition: transform 0.8s ease;
+        }
+
+        .letter-3d-rig {
+            position: relative;
+            width: min(600px, 94vw);
+            height: min(650px, 90vh, 90dvh);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .envelope-shell-3d {
+            position: absolute;
+            width: min(440px, 88vw);
+            height: min(280px, 56vw);
+            transform-style: preserve-3d;
+            filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.75))
+                    drop-shadow(0 0 28px rgba(255, 213, 79, 0.48));
+        }
+
+        .envelope-back-plate {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #c2954e 0%, #8f6426 100%);
+            border: 2px solid #ffe082;
+            box-shadow: inset 0 0 35px rgba(46, 25, 5, 0.75);
+        }
+
+        .envelope-inner-magic-glow {
+            position: absolute;
+            top: -30%;
+            left: 10%;
+            width: 80%;
+            height: 90%;
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 251, 214, 0.95) 0%,
+                rgba(255, 202, 40, 0.55) 45%,
+                rgba(255, 152, 0, 0) 75%
+            );
+            filter: blur(12px);
+        }
+
+        .envelope-pocket-front {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            border-radius: 10px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .pocket-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .envelope-top-flap-3d {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 59%;
+            z-index: 6;
+            transform-origin: top center;
+            transform-style: preserve-3d;
+            pointer-events: none;
+        }
+
+        .flap-face {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .flap-outer-face {
+            transform: rotateX(0deg);
+        }
+
+        .flap-inner-face {
+            transform: rotateX(180deg);
+        }
+
+        .flap-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .golden-cords-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 7;
+            pointer-events: none;
+        }
+
+        .wax-seal-anchor {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 96px;
+            height: 96px;
+            z-index: 8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .celestial-wax-seal-3d {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.72));
+        }
+
+        .wax-seal-detail-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .seal-sparks-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seal-spark-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 0%, #ffe082 55%, #ff8f00 100%);
+            box-shadow: 0 0 12px #ffd54f;
+            opacity: 0;
+        }
+
+        .letter-sheet-carrier {
+            position: relative;
+            width: min(540px, 92vw);
+            max-height: 82vh;
+            max-height: 82dvh;
+            transform-style: preserve-3d;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .parchment-paper-card {
+            position: relative;
+            width: 100%;
+            max-height: 82vh;
+            max-height: 82dvh;
+            background: radial-gradient(circle at 50% 35%, #fffef9 0%, #fbf0d9 62%, #edd6ad 100%);
+            border-radius: 12px;
+            box-shadow:
+                0 25px 65px rgba(0, 0, 0, 0.78),
+                0 0 38px rgba(255, 224, 130, 0.48),
+                inset 0 0 42px rgba(184, 134, 11, 0.18);
+            padding: clamp(12px, 2.5vw, 20px);
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            transform-style: preserve-3d;
+        }
+
+        .paper-fold-panel {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 36px;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.18), transparent);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .top-fold-wing {
+            top: 0;
+            transform-origin: top center;
+        }
+
+        .bottom-fold-wing {
+            bottom: 0;
+            transform-origin: bottom center;
+        }
+
+        .parchment-ornate-frame {
+            position: relative;
+            border: 2px double rgba(161, 98, 7, 0.65);
+            border-radius: 8px;
+            padding: clamp(14px, 3.5vw, 34px);
+            background: rgba(255, 253, 245, 0.55);
+        }
+
+        .corner-ornament {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #b45309;
+            pointer-events: none;
+        }
+
+        .corner-ornament.tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+        .corner-ornament.tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
+        .corner-ornament.bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
+        .corner-ornament.br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+        .letter-crest-header {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.15rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #854d0e;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(180, 83, 9, 0.25);
+        }
+
+        .letter-scroll-body {
+            font-family: 'Lora', serif;
+            font-size: clamp(0.94rem, 2.05vw, 1.08rem);
+            line-height: 1.72;
+            color: #2c1810;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .letter-paragraph {
+            margin-bottom: 13px;
+            text-align: justify;
+        }
+
+        .letter-signature-line {
+            margin-top: 20px;
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.4rem, 3vw, 1.75rem);
+            font-weight: 700;
+            color: #7c2d12;
+        }
+
+        .letter-action-footer {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .confirm-read-luxury-btn {
+            position: relative;
+            padding: 12px 38px;
+            min-height: 48px;
+            border-radius: 999px;
+            border: 1.8px solid #b45309;
+            background: linear-gradient(135deg, #fffbeb 0%, #fde68a 55%, #f59e0b 100%);
+            color: #3b1704;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.22rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: not-allowed;
+            opacity: 0.6;
+            box-shadow: 0 6px 18px rgba(180, 83, 9, 0.25);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            touch-action: manipulation;
+        }
+
+        .confirm-read-luxury-btn.is-interactive {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .confirm-read-luxury-btn.is-interactive:hover,
+        .confirm-read-luxury-btn.is-interactive:focus-visible {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 26px rgba(217, 119, 6, 0.45), 0 0 22px rgba(253, 224, 71, 0.85);
+            outline: none;
+        }
+
+        .confirm-read-luxury-btn.is-interactive:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .parchment-paper-card::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .parchment-paper-card::-webkit-scrollbar-thumb {
+            background: rgba(180, 83, 9, 0.35);
+            border-radius: 999px;
+        }
+
+        /* ================= GIAI ĐOẠN 6: DỪA XANH & PHÁO HOA ================= */
+        .coconut-fireworks-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        .fireworks-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ending-celebration-modal {
+            position: absolute;
+            bottom: max(24px, env(safe-area-inset-bottom, 24px));
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(520px, 92vw);
+            text-align: center;
+            background: rgba(18, 12, 38, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 213, 79, 0.75);
+            border-radius: 20px;
+            padding: 22px 24px;
+            pointer-events: auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(255, 213, 79, 0.4);
+            animation: floatBanner 0.8s ease-out forwards;
+        }
+
+        .ending-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 4.2vw, 2.1rem);
+            color: #ffe082;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        .ending-subtitle {
+            font-size: 0.98rem;
+            color: #f3e5f5;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .restart-story-btn {
+            padding: 12px 28px;
+            min-height: 48px;
+            border-radius: 999px;
+            border: 1.5px solid #ffd54f;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.12rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .restart-story-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 22px rgba(251, 191, 36, 0.85);
+        }
+
+        /* ================= TỐI ƯU TOÀN DIỆN CHO ĐIỆN THOẠI & TABLET ================= */
+        @media (max-width: 768px) {
+            .sound-toggle-pill {
+                top: max(12px, env(safe-area-inset-top, 12px));
+                right: max(12px, env(safe-area-inset-right, 12px));
+                padding: 6px 14px;
+                font-size: 0.88rem;
+                min-height: 38px;
+            }
+
+            .invitation-banner {
+                margin-top: 36px;
+                padding: 10px 16px;
+                border-radius: 16px;
+            }
+
+            .invitation-title {
+                font-size: clamp(1.22rem, 5vw, 1.7rem);
+            }
+
+            .invitation-subtitle {
+                font-size: clamp(0.82rem, 3.4vw, 0.95rem);
+                margin-top: 4px;
+            }
+
+            .fisherman-container {
+                left: 0;
+                bottom: 14%;
+                width: min(340px, 66vw);
+            }
+
+            .fantasy-meter-wrapper {
+                right: max(10px, env(safe-area-inset-right, 10px));
+                top: 46%;
+                gap: 5px;
+            }
+
+            .meter-track {
+                width: 28px;
+                height: min(250px, 35vh);
+            }
+
+            .meter-label {
+                font-size: 0.8rem;
+                letter-spacing: 0.08em;
+            }
+
+            .target-fish-svg {
+                width: 22px;
+                height: 15px;
+            }
+
+            .touch-controls-area {
+                padding-bottom: max(6px, env(safe-area-inset-bottom, 6px));
+            }
+
+            .hold-cast-button {
+                width: calc(100vw - 36px);
+                max-width: 350px;
+                padding: 14px 22px;
+                font-size: 1.08rem;
+                min-height: 52px;
+            }
+
+            .morph-actor {
+                width: min(220px, 58vw);
+                height: min(220px, 58vw);
+            }
+
+            .envelope-3d-stage {
+                width: 96vw;
+            }
+
+            .envelope-back-body {
+                width: min(340px, 90vw);
+                height: 205px;
+            }
+
+            .envelope-top-flap {
+                height: 110px;
+            }
+
+            .celestial-wax-seal {
+                width: 64px;
+                height: 64px;
+            }
+
+            .parchment-letter-sheet {
+                width: 95vw;
+                max-height: min(82vh, 82dvh, 640px);
+                padding: 12px 10px;
+                border-radius: 12px;
+            }
+
+            .parchment-inner-border {
+                padding: 14px 12px;
+                border-width: 1.5px;
+            }
+
+            .mekong-floral-header {
+                font-size: 1.18rem;
+                margin-bottom: 8px;
+            }
+
+            .letter-body-content {
+                font-size: 0.94rem;
+                line-height: 1.62;
+            }
+
+            .letter-paragraph-item {
+                margin-bottom: 8px;
+            }
+
+            .letter-signature {
+                font-size: 1.35rem;
+                margin-top: 8px;
+                margin-bottom: 3px;
+            }
+
+            .confirm-read-btn {
+                padding: 11px 28px;
+                font-size: 1.08rem;
+                min-height: 48px;
+            }
+
+            .ending-celebration-modal {
+                width: 94vw;
+                padding: 18px 16px;
+                border-radius: 16px;
+                bottom: max(20px, env(safe-area-inset-bottom, 20px));
+            }
+
+            .ending-title {
+                font-size: clamp(1.22rem, 5vw, 1.65rem);
+            }
+
+            .ending-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+
+            .restart-story-btn {
+                padding: 11px 24px;
+                font-size: 1.02rem;
+                min-height: 48px;
+            }
+        }
+
+        /* Màn hình điện thoại nhỏ (iPhone SE, Galaxy A series, v.v. <= 400px) */
+        @media (max-width: 400px) {
+            .sound-toggle-pill {
+                padding: 5px 10px;
+                font-size: 0.8rem;
+            }
+
+            .invitation-banner {
+                margin-top: 32px;
+                padding: 8px 12px;
+            }
+
+            .invitation-title {
+                font-size: 1.18rem;
+            }
+
+            .fisherman-container {
+                bottom: 15%;
+                width: 72vw;
+            }
+
+            .fantasy-meter-wrapper {
+                right: 6px;
+            }
+
+            .meter-track {
+                width: 24px;
+                height: 32vh;
+            }
+
+            .hold-cast-button {
+                padding: 12px 18px;
+                font-size: 0.98rem;
+                min-height: 48px;
+            }
+
+            .parchment-inner-border {
+                padding: 10px 8px;
+            }
+
+            .letter-body-content {
+                font-size: 0.88rem;
+                line-height: 1.58;
+            }
+        }
+
+        /* Khi xoay ngang điện thoại (Landscape mobile: chiều cao <= 500px) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .fishing-ui-overlay {
+                padding: max(10px, env(safe-area-inset-top, 10px)) 16px max(10px, env(safe-area-inset-bottom, 10px));
+            }
+
+            .invitation-banner {
+                margin-top: 0;
+                padding: 6px 14px;
+            }
+
+            .invitation-title {
+                font-size: 1.15rem;
+            }
+
+            .invitation-subtitle {
+                display: none;
+            }
+
+            .fisherman-container {
+                bottom: 2%;
+                left: 4%;
+                width: 32vw;
+            }
+
+            .fantasy-meter-wrapper {
+                top: 48%;
+                right: max(14px, env(safe-area-inset-right, 14px));
+            }
+
+            .meter-track {
+                height: 45vh;
+                width: 24px;
+            }
+
+            .hold-cast-button {
+                padding: 8px 20px;
+                font-size: 0.95rem;
+                min-height: 40px;
+            }
+
+            .parchment-letter-sheet {
+                max-height: 88vh;
+                max-height: 88dvh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <!-- Script chạy ứng dụng qua Babel Standalone (Không cần cài Node.js, mở file là chạy ngay) -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        // ================= KHO DỮ LIỆU & NỘI DUNG LÁ THƯ =================
+        const DEFAULT_LETTER_CONTENT = {
+            paragraphs: [
+                "Chúc em một buổi chiều thật bình yên và dịu dàng.",
+                "Mong rằng giữa những bộn bề của cuộc sống, em vẫn luôn tìm thấy cho mình một khoảng trời riêng để nghỉ ngơi, mỉm cười và tận hưởng những điều nhỏ bé nhưng đáng quý.",
+                "Chúc cho mọi muộn phiền dần tan theo dòng nước, những điều tốt đẹp sẽ đến như ánh nắng cuối ngày, và niềm vui sẽ luôn ghé thăm em theo những cách bất ngờ nhất.",
+                "Hy vọng lá thư nhỏ này có thể mang đến cho em một chút ấm áp, một chút bất ngờ và thật nhiều niềm vui trong buổi chiều hôm nay.",
+                "Hãy luôn vui vẻ, bình an và giữ cho mình một trái tim đầy hy vọng nhé!"
+            ],
+            signature: "Gửi đến em những điều tốt đẹp nhất."
+        };
+
+        // ================= BỘ TẠO ÂM THANH WEB AUDIO SYNTHESIZER =================
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = true; // Mặc định trạng thái BẬT
+                this.ambientGain = null;
+                this.ambientInterval = null;
+                this.droneNodes = [];
+            }
+
+            ensureContext() {
+                try {
+                    if (!this.ctx) {
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (AudioCtx) {
+                            this.ctx = new AudioCtx();
+                        }
+                    }
+                    if (this.ctx && this.ctx.state === 'suspended') {
+                        this.ctx.resume().then(() => {
+                            if (this.enabled) this.startAmbient();
+                        }).catch(() => {});
+                    } else if (this.ctx && this.ctx.state === 'running' && this.enabled && !this.ambientGain) {
+                        this.startAmbient();
+                    }
+                } catch (e) {}
+            }
+
+            initAndToggle() {
+                this.ensureContext();
+                // Nếu context vừa mới được kích hoạt từ trạng thái suspended, giữ nguyên enabled = true
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                    this.enabled = true;
+                    this.startAmbient();
+                    return true;
+                }
+                this.enabled = !this.enabled;
+                if (this.enabled) {
+                    this.startAmbient();
+                } else {
+                    this.stopAmbient();
+                }
+                return this.enabled;
+            }
+
+            // Tạo nhạc nền sông nước hoàng hôn du dương (drone ấm + tiếng gió nước + chuông ngũ cung)
+            startAmbient() {
+                if (!this.enabled || !this.ctx || this.ambientGain) return;
+                try {
+                    const master = this.ctx.createGain();
+                    master.gain.setValueAtTime(0.01, this.ctx.currentTime);
+                    master.gain.linearRampToValueAtTime(0.12, this.ctx.currentTime + 3);
+                    master.connect(this.ctx.destination);
+                    this.ambientGain = master;
+
+                    // 1. Drone ấm áp hoàng hôn (Hợp âm D trầm 73.4Hz + 110Hz + 146.8Hz)
+                    const freqs = [73.42, 110.0, 146.83];
+                    freqs.forEach((f) => {
+                        const osc = this.ctx.createOscillator();
+                        const g = this.ctx.createGain();
+                        const filter = this.ctx.createBiquadFilter();
+
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(f, this.ctx.currentTime);
+
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(260, this.ctx.currentTime);
+
+                        g.gain.setValueAtTime(0.04, this.ctx.currentTime);
+                        osc.connect(filter);
+                        filter.connect(g);
+                        g.connect(master);
+                        osc.start();
+                        this.droneNodes.push(osc);
+                    });
+
+                    // 2. Tiếng nước gợn sóng lăn tăn (Gió nước êm đềm)
+                    const bufSize = Math.floor(this.ctx.sampleRate * 2);
+                    const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+                    const d = buf.getChannelData(0);
+                    for (let i = 0; i < bufSize; i++) d[i] = Math.random() * 2 - 1;
+
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = buf;
+                    noise.loop = true;
+
+                    const waterFilter = this.ctx.createBiquadFilter();
+                    waterFilter.type = 'bandpass';
+                    waterFilter.frequency.setValueAtTime(450, this.ctx.currentTime);
+                    waterFilter.Q.setValueAtTime(4, this.ctx.currentTime);
+
+                    const waterGain = this.ctx.createGain();
+                    waterGain.gain.setValueAtTime(0.02, this.ctx.currentTime);
+
+                    noise.connect(waterFilter);
+                    waterFilter.connect(waterGain);
+                    waterGain.connect(master);
+                    noise.start();
+                    this.droneNodes.push(noise);
+
+                    // 3. Chuông ngũ cung thư giãn rơi nhẹ mỗi 4.2 giây
+                    const pentatonic = [293.66, 329.63, 392.0, 440.0, 493.88, 587.33];
+                    const playRandomBell = () => {
+                        if (!this.enabled || !this.ctx || !this.ambientGain) return;
+                        try {
+                            const now = this.ctx.currentTime;
+                            const freq = pentatonic[Math.floor(Math.random() * pentatonic.length)];
+                            const bellOsc = this.ctx.createOscillator();
+                            const bellGain = this.ctx.createGain();
+
+                            bellOsc.type = 'sine';
+                            bellOsc.frequency.setValueAtTime(freq, now);
+
+                            bellGain.gain.setValueAtTime(0.06, now);
+                            bellGain.gain.exponentialRampToValueAtTime(0.0005, now + 2.2);
+
+                            bellOsc.connect(bellGain);
+                            bellGain.connect(master);
+                            bellOsc.start(now);
+                            bellOsc.stop(now + 2.2);
+                        } catch (e) {}
+                    };
+
+                    this.ambientInterval = setInterval(playRandomBell, 4200);
+                } catch (e) {}
+            }
+
+            stopAmbient() {
+                try {
+                    if (this.ambientInterval) {
+                        clearInterval(this.ambientInterval);
+                        this.ambientInterval = null;
+                    }
+                    if (this.ambientGain && this.ctx) {
+                        this.ambientGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+                        setTimeout(() => {
+                            this.droneNodes.forEach((node) => {
+                                try { node.stop(); } catch (_) {}
+                            });
+                            this.droneNodes = [];
+                            this.ambientGain = null;
+                        }, 550);
+                    }
+                } catch (e) {}
+            }
+
+            playWarpSound() {
+                this.ensureContext();
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(90, now);
+                    osc.frequency.exponentialRampToValueAtTime(420, now + 2.5);
+                    gain.gain.setValueAtTime(0.01, now);
+                    gain.gain.linearRampToValueAtTime(0.18, now + 1.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.8);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 2.8);
+                } catch (e) {}
+            }
+
+            playCastSound() {
+                this.ensureContext();
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(450, now);
+                    osc.frequency.exponentialRampToValueAtTime(140, now + 0.3);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } catch (e) {}
+            }
+
+            playChargeTick(powerPercent) {
+                this.ensureContext();
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(220 + powerPercent * 4.5, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.07);
+                } catch (e) {}
+            }
+
+            playSplash(isSuccess) {
+                this.ensureContext();
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    const bufferSize = Math.floor(this.ctx.sampleRate * 0.45);
+                    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = Math.random() * 2 - 1;
+                    }
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = buffer;
+
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.setValueAtTime(isSuccess ? 900 : 400, now);
+
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.005, now + 0.45);
+
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    noise.start(now);
+                } catch (e) {}
+            }
+
+            playMagicChime() {
+                this.ensureContext();
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+                    notes.forEach((freq, idx) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        const startTime = now + idx * 0.09;
+                        osc.frequency.setValueAtTime(freq, startTime);
+                        gain.gain.setValueAtTime(0.14, startTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.75);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start(startTime);
+                        osc.stop(startTime + 0.75);
+                    });
+                } catch (e) {}
+            }
+
+            playFireworkPop() {
+                this.ensureContext();
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    // 1. Tiếng rít tên lửa vút lên
+                    const whistle = this.ctx.createOscillator();
+                    const whistleGain = this.ctx.createGain();
+                    whistle.type = 'sine';
+                    whistle.frequency.setValueAtTime(350, now);
+                    whistle.frequency.exponentialRampToValueAtTime(1400, now + 0.18);
+                    whistleGain.gain.setValueAtTime(0.08, now);
+                    whistleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                    whistle.connect(whistleGain);
+                    whistleGain.connect(this.ctx.destination);
+                    whistle.start(now);
+                    whistle.stop(now + 0.18);
+
+                    // 2. Tiếng nổ trầm vang (Boom bass)
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(260 + Math.random() * 180, now + 0.08);
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.38);
+                    gain.gain.setValueAtTime(0.25, now + 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + 0.08);
+                    osc.stop(now + 0.38);
+
+                    // 3. Tiếng lách tách hoa lửa tàn (Crackle)
+                    const crackleLen = Math.floor(this.ctx.sampleRate * 0.3);
+                    const crackleBuffer = this.ctx.createBuffer(1, crackleLen, this.ctx.sampleRate);
+                    const cd = crackleBuffer.getChannelData(0);
+                    for (let i = 0; i < crackleLen; i++) {
+                        cd[i] = (Math.random() * 2 - 1) * Math.exp(-i / (crackleLen * 0.4));
+                    }
+                    const noiseSrc = this.ctx.createBufferSource();
+                    noiseSrc.buffer = crackleBuffer;
+                    const noiseGain = this.ctx.createGain();
+                    noiseGain.gain.setValueAtTime(0.18, now + 0.12);
+                    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    noiseSrc.connect(noiseGain);
+                    noiseGain.connect(this.ctx.destination);
+                    noiseSrc.start(now + 0.12);
+                } catch (e) {}
+            }
+        }
+        const audioManager = new SoundEngine();
+
+        // Mở khóa âm thanh trình duyệt ngay khi người dùng chạm hoặc bấm phím bất kỳ
+        const unlockAudioOnGesture = () => {
+            audioManager.ensureContext();
+            if (audioManager.enabled) audioManager.startAmbient();
+        };
+        ['pointerdown', 'keydown', 'touchstart', 'click'].forEach((ev) => {
+            window.addEventListener(ev, unlockAudioOnGesture, { once: true, passive: true });
+        });
+
+        // ================= 1. GALAXY & DESCENT THREE.JS SCENE =================
+        const GalaxyAndDescentScene = ({ stage, onAdvanceStage }) => {
+            const mountRef = useRef(null);
+            const flashOverlayRef = useRef(null);
+            const cloudTunnelRef = useRef(null);
+
+            useEffect(() => {
+                const container = mountRef.current;
+                if (!container) return;
+
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                const scene = new THREE.Scene();
+                scene.fog = new THREE.FogExp2(0x050314, 0.0018);
+
+                const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 2000);
+                camera.position.set(0, 18, 95);
+                camera.lookAt(0, 0, 0);
+
+                let renderer;
+                try {
+                    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    container.innerHTML = '';
+                    container.appendChild(renderer.domElement);
+                } catch (e) {
+                    const timer = setTimeout(() => onAdvanceStage('RIVER_SCENE'), 2000);
+                    return () => clearTimeout(timer);
+                }
+
+                const isMobile = window.innerWidth < 768;
+                const starCount = isMobile ? 6500 : 14000;
+                const galaxyGeo = new THREE.BufferGeometry();
+                const positions = new Float32Array(starCount * 3);
+                const colors = new Float32Array(starCount * 3);
+
+                const colorCore = new THREE.Color('#68e8ff');
+                const colorInner = new THREE.Color('#f7a8e8');
+                const colorMid = new THREE.Color('#8e44ec');
+                const colorOuter = new THREE.Color('#d97736');
+
+                for (let i = 0; i < starCount; i++) {
+                    const i3 = i * 3;
+                    const radius = Math.pow(Math.random(), 1.6) * 85;
+                    const spinAngle = radius * 0.14;
+                    const branchAngle = ((i % 4) / 4) * Math.PI * 2;
+
+                    const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 8;
+                    const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 4;
+                    const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 8;
+
+                    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+                    positions[i3 + 1] = randomY;
+                    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+                    const mixedColor = colorCore.clone();
+                    const ratio = radius / 85;
+                    if (ratio < 0.2) {
+                        mixedColor.lerp(colorInner, ratio / 0.2);
+                    } else if (ratio < 0.65) {
+                        mixedColor.copy(colorInner).lerp(colorMid, (ratio - 0.2) / 0.45);
+                    } else {
+                        mixedColor.copy(colorMid).lerp(colorOuter, (ratio - 0.65) / 0.35);
+                    }
+
+                    colors[i3] = mixedColor.r;
+                    colors[i3 + 1] = mixedColor.g;
+                    colors[i3 + 2] = mixedColor.b;
+                }
+
+                galaxyGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                galaxyGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+                const galaxyMat = new THREE.PointsMaterial({
+                    size: isMobile ? 0.55 : 0.42,
+                    vertexColors: true,
+                    blending: THREE.AdditiveBlending,
+                    transparent: true,
+                    opacity: 0.92,
+                    depthWrite: false
+                });
+
+                const galaxyPoints = new THREE.Points(galaxyGeo, galaxyMat);
+                galaxyPoints.rotation.x = 0.55;
+                scene.add(galaxyPoints);
+
+                const coreGeo = new THREE.SphereGeometry(5.2, 32, 32);
+                const coreMat = new THREE.MeshBasicMaterial({
+                    color: 0x7ef4ff,
+                    transparent: true,
+                    opacity: 0.85,
+                    blending: THREE.AdditiveBlending
+                });
+                const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+                scene.add(coreMesh);
+
+                const shootingStarGeo = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(-8, -3, 0)
+                ]);
+                const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 });
+                const shootingStar = new THREE.Line(shootingStarGeo, shootingStarMat);
+                shootingStar.position.set(45, 25, -20);
+                scene.add(shootingStar);
+
+                const earthGeo = new THREE.SphereGeometry(32, 48, 48);
+                const earthMat = new THREE.MeshBasicMaterial({
+                    color: 0xf59e0b,
+                    transparent: true,
+                    opacity: 0
+                });
+                const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+                earthMesh.position.set(0, -34, -40);
+                scene.add(earthMesh);
+
+                let reqId;
+                let warpSpeed = 0.0025;
+
+                const animate = () => {
+                    reqId = requestAnimationFrame(animate);
+                    galaxyPoints.rotation.y += warpSpeed;
+                    shootingStar.position.x -= 0.7;
+                    shootingStar.position.y -= 0.26;
+                    if (shootingStar.position.x < -70) {
+                        shootingStar.position.set(60 + Math.random() * 30, 25 + Math.random() * 15, -20);
+                    }
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                const tl = gsap.timeline();
+
+                tl.to(camera.position, {
+                    z: 58,
+                    y: 11,
+                    duration: prefersReducedMotion ? 1.5 : 3.2,
+                    ease: 'sine.inOut',
+                    onComplete: () => {
+                        onAdvanceStage('EARTH_DESCENT');
+                        audioManager.playWarpSound();
+                    }
+                });
+
+                tl.to(
+                    camera.position,
+                    {
+                        z: 3,
+                        y: 0.5,
+                        duration: prefersReducedMotion ? 1.5 : 2.6,
+                        ease: 'power3.in',
+                        onUpdate: () => {
+                            warpSpeed = Math.min(0.065, warpSpeed + 0.0014);
+                            camera.rotation.z += prefersReducedMotion ? 0.005 : 0.028;
+                        }
+                    },
+                    '>'
+                );
+
+                tl.to(earthMat, { opacity: 0.75, duration: 1.4, ease: 'power2.in' }, '<-1.2');
+
+                tl.to(cloudTunnelRef.current, { opacity: 1, scale: 1.35, duration: 1.1, ease: 'power2.in' }, '-=0.9');
+
+                tl.to(flashOverlayRef.current, {
+                    opacity: 1,
+                    duration: 0.65,
+                    ease: 'power2.inOut',
+                    onComplete: () => onAdvanceStage('RIVER_SCENE')
+                }, '-=0.35');
+
+                const handleResize = () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                };
+                window.addEventListener('resize', handleResize);
+
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                    cancelAnimationFrame(reqId);
+                    tl.kill();
+                    galaxyGeo.dispose();
+                    galaxyMat.dispose();
+                    coreGeo.dispose();
+                    coreMat.dispose();
+                    earthGeo.dispose();
+                    earthMat.dispose();
+                    renderer.dispose();
+                };
+            }, []);
+
+            if (stage !== 'GALAXY' && stage !== 'EARTH_DESCENT') return null;
+
+            return (
+                <div className="galaxy-stage-wrapper">
+                    <div ref={mountRef} className="webgl-canvas-mount" />
+                    <div ref={cloudTunnelRef} className="cloud-descent-layer" />
+                    <div ref={flashOverlayRef} className="warm-sunset-transition-veil" />
+                    <div className="galaxy-caption">
+                        {stage === 'GALAXY' ? 'Đang du hành qua dải ngân hà huyền ảo...' : 'Xuyên qua tầng mây về miền sông nước Đồng Tháp...'}
+                    </div>
+                </div>
+            );
+        };
+
+        // ================= 2. NGƯỜI ĐÀN ÔNG CÂU CÁ (FISHERMAN SVG) =================
+        const FishermanCharacter = ({ fishingStatus, power, stage }) => {
+            const isPulling =
+                fishingStatus === 'success' ||
+                stage === 'FISH_SUCCESS' ||
+                stage === 'FISH_TRANSFORMATION';
+
+            const isCharging = fishingStatus === 'charging';
+            const rodBendOffset = isPulling ? 42 : isCharging ? (power / 100) * 22 : 4;
+
+            return (
+                <div className={`fisherman-container ${isPulling ? 'pulling-active' : ''}`}>
+                    <svg viewBox="0 0 420 360" className="fisherman-svg" aria-label="Người đàn ông miền Tây câu cá">
+                        <defs>
+                            <linearGradient id="woodDockGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#6b4423" />
+                                <stop offset="100%" stopColor="#3a2010" />
+                            </linearGradient>
+                            <linearGradient id="shirtBaBaGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stopColor="#9c5a3c" />
+                                <stop offset="100%" stopColor="#5e321e" />
+                            </linearGradient>
+                            <linearGradient id="nonLaGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stopColor="#f6e3ba" />
+                                <stop offset="60%" stopColor="#d9b372" />
+                                <stop offset="100%" stopColor="#9c7438" />
+                            </linearGradient>
+                            <filter id="warmRimGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="2" dy="-1" stdDeviation="2.5" floodColor="#ffcf70" floodOpacity="0.6" />
+                            </filter>
+                        </defs>
+
+                        {/* Cầu gỗ */}
+                        <g className="wooden-pier">
+                            <rect x="20" y="290" width="6" height="65" fill="#2c1608" />
+                            <rect x="75" y="292" width="7" height="65" fill="#2c1608" />
+                            <rect x="135" y="295" width="7" height="62" fill="#2c1608" />
+                            <path d="M5,288 L165,295 L155,308 L0,300 Z" fill="url(#woodDockGrad)" stroke="#ffbe6b" strokeWidth="0.7" />
+                            <path d="M18,284 L168,291" stroke="#8c5830" strokeWidth="3" strokeLinecap="round" />
+                        </g>
+
+                        {/* Thân nhân vật */}
+                        <g className="character-body-rig" filter="url(#warmRimGlow)">
+                            <path d="M98,225 L92,272 L104,272 L108,228 Z" fill="#242938" />
+                            <path d="M112,225 L118,274 L130,274 L123,225 Z" fill="#1c202b" />
+                            <path d="M94,272 L94,290 L109,291 L103,285 L102,272 Z" fill="#d99b72" />
+                            <path d="M119,274 L121,291 L136,292 L129,286 L128,274 Z" fill="#c58860" />
+
+                            <path d="M88,152 C86,178 89,205 92,230 L128,230 C130,204 128,175 122,150 Z" fill="url(#shirtBaBaGrad)" />
+                            <path d="M94,150 Q108,162 122,152 L125,188 L116,189 L114,158 L98,185 L90,182 Z" fill="#e8dec8" stroke="#333" strokeDasharray="3 2" strokeWidth="1.2" />
+
+                            <path d="M102,135 L104,152 L116,152 L114,135 Z" fill="#d99b72" />
+                            <circle cx="111" cy="126" r="14" fill="#e0a57e" />
+                            <path d="M123,124 L127,128 L123,130" fill="#e0a57e" />
+                            <circle cx="118" cy="123" r="1.6" fill="#2b1911" />
+                            <path d="M117,132 Q121,134 123,131" stroke="#6e3b26" strokeWidth="1.3" fill="none" />
+
+                            <path d="M72,122 L112,96 L152,122 Q112,129 72,122 Z" fill="url(#nonLaGrad)" stroke="#7a5724" strokeWidth="1" />
+                            <path d="M84,115 Q112,120 140,115" stroke="#b38849" strokeWidth="0.8" fill="none" />
+                            <path d="M96,107 Q112,111 128,107" stroke="#b38849" strokeWidth="0.8" fill="none" />
+
+                            <g
+                                className="arm-and-rod-group"
+                                style={{
+                                    transform: `rotate(${isPulling ? -18 : isCharging ? -(power / 100) * 10 : 0}deg)`,
+                                    transformOrigin: '105px 162px',
+                                    transition: isCharging ? 'none' : 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)'
+                                }}
+                            >
+                                <path d="M102,158 L128,178 L152,170" stroke="url(#shirtBaBaGrad)" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                <circle cx="154" cy="169" r="5.5" fill="#e0a57e" />
+
+                                <path d={`M136,175 Q245,${110 - rodBendOffset * 0.5} 355,${82 + rodBendOffset}`} stroke="#d4a259" strokeWidth="4.2" strokeLinecap="round" fill="none" />
+                                <path d={`M240,${142 - rodBendOffset * 0.25} Q300,${96 - rodBendOffset * 0.2} 355,${82 + rodBendOffset}`} stroke="#ffdf9e" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+                                <line
+                                    x1="355"
+                                    y1={82 + rodBendOffset}
+                                    x2={isPulling ? '335' : '362'}
+                                    y2={isPulling ? '195' : '318'}
+                                    stroke="rgba(255, 250, 220, 0.82)"
+                                    strokeWidth={isPulling ? '2.2' : '1.3'}
+                                />
+                                {!isPulling && (
+                                    <g transform={`translate(362, ${312 + Math.sin(power * 0.2) * 3})`}>
+                                        <ellipse cx="0" cy="0" rx="3.5" ry="6" fill="#ff4d4d" />
+                                        <ellipse cx="0" cy="-3" rx="3" ry="2.5" fill="#ffffff" />
+                                    </g>
+                                )}
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            );
+        };
+
+        // ================= 3. SÔNG NƯỚC ĐỒNG THÁP CANVAS & VECTOR =================
+        const DongThapRiverScene = ({ stage, fishingStatus, power }) => {
+            const waterCanvasRef = useRef(null);
+
+            useEffect(() => {
+                const canvas = waterCanvasRef.current;
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                let animId;
+                let time = 0;
+
+                const handleResize = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight * 0.52;
+                };
+                handleResize();
+                window.addEventListener('resize', handleResize);
+
+                const ripples = [];
+                const ambientFish = { x: 0, y: 0, vx: 0, vy: 0, angle: 0, active: false };
+
+                const spawnRipple = (x, y, maxRadius = 48) => {
+                    ripples.push({ x, y, radius: 3, maxRadius, alpha: 0.85 });
+                };
+
+                if (fishingStatus === 'failure' || fishingStatus === 'success') {
+                    spawnRipple(canvas.width * 0.48, canvas.height * 0.52, 85);
+                }
+
+                const renderWater = () => {
+                    time += 0.025;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // 1. Phản chiếu hoàng hôn lấp lánh
+                    for (let i = 0; i < 38; i++) {
+                        const yRatio = i / 38;
+                        const y = yRatio * canvas.height;
+                        const waveOffset = Math.sin(time * 2 + i * 0.45) * (8 + yRatio * 22);
+                        const centerRiverX = canvas.width * 0.5 + Math.sin(yRatio * 3.2 - 0.6) * (canvas.width * 0.14);
+                        const stripWidth = (45 + yRatio * 180) + Math.cos(time * 1.5 + i) * 14;
+
+                        ctx.fillStyle = `rgba(255, ${205 - Math.floor(yRatio * 55)}, 95, ${0.42 - yRatio * 0.22})`;
+                        ctx.beginPath();
+                        if (ctx.roundRect) {
+                            ctx.roundRect(centerRiverX - stripWidth / 2 + waveOffset, y, stripWidth, 3.5 + yRatio * 3, 4);
+                        } else {
+                            ctx.rect(centerRiverX - stripWidth / 2 + waveOffset, y, stripWidth, 3.5 + yRatio * 3);
+                        }
+                        ctx.fill();
+                    }
+
+                    // 2. Cá nhảy lấp lánh ngẫu nhiên
+                    if (!ambientFish.active && Math.random() < 0.008) {
+                        ambientFish.active = true;
+                        ambientFish.x = canvas.width * (0.35 + Math.random() * 0.35);
+                        ambientFish.y = canvas.height * (0.35 + Math.random() * 0.35);
+                        ambientFish.vx = (Math.random() < 0.5 ? 1 : -1) * (2.2 + Math.random() * 1.5);
+                        ambientFish.vy = -5.8;
+                        spawnRipple(ambientFish.x, ambientFish.y, 42);
+                    }
+
+                    if (ambientFish.active) {
+                        ambientFish.x += ambientFish.vx;
+                        ambientFish.y += ambientFish.vy;
+                        ambientFish.vy += 0.24;
+                        ambientFish.angle = Math.atan2(ambientFish.vy, ambientFish.vx);
+
+                        ctx.save();
+                        ctx.translate(ambientFish.x, ambientFish.y);
+                        ctx.rotate(ambientFish.angle);
+                        ctx.fillStyle = '#ffe299';
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, 11, 4.5, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(-9, 0);
+                        ctx.lineTo(-16, -5);
+                        ctx.lineTo(-16, 5);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.restore();
+
+                        if (ambientFish.vy > 0 && ambientFish.y > canvas.height * 0.45) {
+                            spawnRipple(ambientFish.x, ambientFish.y, 50);
+                            ambientFish.active = false;
+                        }
+                    }
+
+                    // 3. Gợn sóng lan tỏa
+                    for (let i = ripples.length - 1; i >= 0; i--) {
+                        const r = ripples[i];
+                        r.radius += 0.85;
+                        r.alpha -= 0.014;
+                        if (r.alpha <= 0) {
+                            ripples.splice(i, 1);
+                            continue;
+                        }
+                        ctx.strokeStyle = `rgba(255, 236, 179, ${r.alpha})`;
+                        ctx.lineWidth = 1.6;
+                        ctx.beginPath();
+                        ctx.ellipse(r.x, r.y, r.radius, r.radius * 0.32, 0, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+
+                    animId = requestAnimationFrame(renderWater);
+                };
+
+                renderWater();
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                    cancelAnimationFrame(animId);
+                };
+            }, [fishingStatus]);
+
+            return (
+                <div className="dong-thap-scene">
+                    <div className="sunset-sky-backdrop">
+                        <div className="sunset-sun-orb" />
+                        <div className="drifting-cloud cloud-1" />
+                        <div className="drifting-cloud cloud-2" />
+                    </div>
+
+                    <svg className="mekong-landscape-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+                        <defs>
+                            <linearGradient id="riverSunsetGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+                                <stop offset="0%" stopColor="#ffdb7d" />
+                                <stop offset="35%" stopColor="#f59042" />
+                                <stop offset="75%" stopColor="#9e4770" />
+                                <stop offset="100%" stopColor="#2c224d" />
+                            </linearGradient>
+                            <linearGradient id="riceFieldLeft" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stopColor="#7cb342" />
+                                <stop offset="100%" stopColor="#33691e" />
+                            </linearGradient>
+                            <linearGradient id="riceFieldRight" x1="1" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#8bc34a" />
+                                <stop offset="100%" stopColor="#2e5c1e" />
+                            </linearGradient>
+                        </defs>
+
+                        <path d="M0,430 Q220,395 450,425 T920,415 T1440,430 L1440,480 L0,480 Z" fill="#d98c5f" opacity="0.45" />
+                        <rect x="0" y="430" width="1440" height="470" fill="url(#riceFieldLeft)" />
+                        <path d="M695,430 C640,465 830,500 760,555 C680,615 470,655 520,745 C560,815 390,865 260,900 L1290,900 C1160,820 960,760 890,675 C830,600 940,535 840,485 C775,452 730,440 695,430 Z" fill="url(#riverSunsetGrad)" />
+                        <path d="M0,520 L580,535 L460,640 L0,610 Z" fill="#689f38" opacity="0.65" />
+                        <path d="M900,530 L1440,515 L1440,635 L860,615 Z" fill="url(#riceFieldRight)" opacity="0.75" />
+
+                        <g transform="translate(650, 620) scale(0.8)">
+                            <path d="M0,0 Q22,12 45,0 L38,10 L8,10 Z" fill="#3e2314" />
+                            <path d="M14,0 Q22,-8 31,0" fill="#8d6e63" />
+                        </g>
+                        <g transform="translate(810, 695) scale(1.05)">
+                            <path d="M0,0 Q25,12 52,0 L43,11 L9,11 Z" fill="#2e190d" />
+                            <path d="M16,0 Q26,-9 36,0" fill="#795548" />
+                        </g>
+
+                        <g className="swaying-palms-left">
+                            <polygon points="110,590 155,565 200,590 200,625 110,625" fill="#5d3a24" />
+                            <polygon points="102,592 155,560 208,592" fill="#8c5230" />
+                            <path d="M85,680 Q105,560 135,480" stroke="#3e2723" strokeWidth="9" fill="none" />
+                            <g transform="translate(135, 480)" className="palm-crown">
+                                <path d="M0,0 Q-45,-15 -75,15" stroke="#1b5e20" strokeWidth="6" fill="none" strokeLinecap="round" />
+                                <path d="M0,0 Q-30,-40 -65,-25" stroke="#2e7d32" strokeWidth="6" fill="none" strokeLinecap="round" />
+                                <path d="M0,0 Q25,-42 65,-20" stroke="#388e3c" strokeWidth="6" fill="none" strokeLinecap="round" />
+                                <path d="M0,0 Q45,-10 75,22" stroke="#1b5e20" strokeWidth="6" fill="none" strokeLinecap="round" />
+                            </g>
+                        </g>
+
+                        <g className="swaying-palms-right">
+                            <path d="M1340,720 Q1310,575 1270,475" stroke="#3e2723" strokeWidth="10" fill="none" />
+                            <g transform="translate(1270, 475)" className="palm-crown">
+                                <path d="M0,0 Q-50,-12 -85,18" stroke="#1b5e20" strokeWidth="6" fill="none" strokeLinecap="round" />
+                                <path d="M0,0 Q-25,-45 -70,-22" stroke="#2e7d32" strokeWidth="6" fill="none" strokeLinecap="round" />
+                                <path d="M0,0 Q35,-38 75,-12" stroke="#388e3c" strokeWidth="6" fill="none" strokeLinecap="round" />
+                            </g>
+                        </g>
+                    </svg>
+
+                    <canvas ref={waterCanvasRef} className="water-shimmer-canvas" />
+                    <div className="river-mist-overlay" />
+                    <FishermanCharacter fishingStatus={fishingStatus} power={power} stage={stage} />
+                </div>
+            );
+        };
+
+        // ================= 4. BỘ ĐO LỰC CÂU CÁ (POWER METER) =================
+        const TARGET_MIN = 55;
+        const TARGET_MAX = 88;
+
+        const FishingPowerMeter = ({ status, power, setPower, onStatusChange, onSuccessCatch }) => {
+            const isTouchScreen = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+            const getPromptMessage = () =>
+                isTouchScreen ? 'Nhấn & giữ nút bên dưới để tích lực câu cá' : 'Nhấn và giữ phím SPACE hoặc nút bên dưới để tích lực câu';
+
+            const [feedbackMsg, setFeedbackMsg] = useState(getPromptMessage);
+            const isHoldingRef = useRef(false);
+            const prevInZoneRef = useRef(false);
+            const rafRef = useRef(null);
+            const powerRef = useRef(0);
+            const directionRef = useRef(1);
+            const statusRef = useRef(status);
+
+            // Luôn cập nhật status mới nhất vào ref mà không gây unmount/cleanup effect
+            useEffect(() => {
+                statusRef.current = status;
+            }, [status]);
+
+            const inTargetZone = power >= TARGET_MIN && power <= TARGET_MAX;
+
+            // Rung phản hồi haptic khi cột lực vừa chạm vào vùng cá vàng
+            useEffect(() => {
+                if (inTargetZone && !prevInZoneRef.current && isHoldingRef.current) {
+                    if (navigator.vibrate) navigator.vibrate(28);
+                }
+                prevInZoneRef.current = inTargetZone;
+            }, [inTargetZone]);
+
+            const stopChargingAndEvaluate = () => {
+                if (!isHoldingRef.current) return;
+                isHoldingRef.current = false;
+                if (rafRef.current) {
+                    cancelAnimationFrame(rafRef.current);
+                    rafRef.current = null;
+                }
+
+                const finalPower = powerRef.current;
+                if (finalPower >= TARGET_MIN && finalPower <= TARGET_MAX) {
+                    onStatusChange('success');
+                    setFeedbackMsg('Tuyệt vời! Cá đã cắn câu!');
+                    audioManager.playSplash(true);
+                    if (navigator.vibrate) navigator.vibrate([40, 70, 60]);
+                    onSuccessCatch();
+                } else {
+                    onStatusChange('failure');
+                    audioManager.playSplash(false);
+                    if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+                    setFeedbackMsg(
+                        finalPower < TARGET_MIN
+                            ? 'Lực hơi nhẹ! Hãy giữ lâu hơn cho cột lực chạm vào vùng cá nhé.'
+                            : 'Lực hơi mạnh! Hãy thả tay ngay khi cột lực vào vùng con cá phát sáng nhé.'
+                    );
+                    setTimeout(() => {
+                        powerRef.current = 0;
+                        directionRef.current = 1;
+                        setPower(0);
+                        onStatusChange('idle');
+                        setFeedbackMsg(getPromptMessage());
+                    }, 1300);
+                }
+            };
+
+            const startCharging = () => {
+                if (statusRef.current === 'success' || statusRef.current === 'failure' || isHoldingRef.current) return;
+                audioManager.ensureContext();
+                audioManager.playCastSound();
+                if (navigator.vibrate) navigator.vibrate(22);
+                isHoldingRef.current = true;
+                directionRef.current = 1;
+                powerRef.current = 0;
+                setPower(0);
+                onStatusChange('charging');
+                setFeedbackMsg('Canh lực vào đúng vùng con cá vàng và thả tay...');
+
+                let lastSoundStep = 0;
+                const updateLoop = () => {
+                    if (!isHoldingRef.current) return;
+
+                    // Tích lực mượt mà và nảy lại nếu chạm đỉnh
+                    powerRef.current += 1.35 * directionRef.current;
+                    if (powerRef.current >= 100) {
+                        powerRef.current = 100;
+                        directionRef.current = -1; // Đổi hướng nảy ngược lại
+                    } else if (powerRef.current <= 0) {
+                        powerRef.current = 0;
+                        directionRef.current = 1; // Nảy lên lại
+                    }
+
+                    setPower(Math.round(powerRef.current));
+
+                    if (Math.abs(powerRef.current - lastSoundStep) > 7) {
+                        audioManager.playChargeTick(powerRef.current);
+                        lastSoundStep = powerRef.current;
+                    }
+
+                    rafRef.current = requestAnimationFrame(updateLoop);
+                };
+
+                if (rafRef.current) cancelAnimationFrame(rafRef.current);
+                rafRef.current = requestAnimationFrame(updateLoop);
+            };
+
+            // Lắng nghe sự kiện bàn phím chỉ 1 lần duy nhất khi mount
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        if (!e.repeat) startCharging();
+                    }
+                };
+                const handleKeyUp = (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        stopChargingAndEvaluate();
+                    }
+                };
+                const handleWindowBlur = () => {
+                    if (isHoldingRef.current) stopChargingAndEvaluate();
+                };
+
+                window.addEventListener('keydown', handleKeyDown, { passive: false });
+                window.addEventListener('keyup', handleKeyUp, { passive: false });
+                window.addEventListener('blur', handleWindowBlur);
+
+                return () => {
+                    window.removeEventListener('keydown', handleKeyDown);
+                    window.removeEventListener('keyup', handleKeyUp);
+                    window.removeEventListener('blur', handleWindowBlur);
+                    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+                };
+            }, []);
+
+            return (
+                <div className="fishing-ui-overlay">
+                    <div className="invitation-banner">
+                        <h1 className="invitation-title">“Hãy giúp người đàn ông câu cá”</h1>
+                        <p className="invitation-subtitle">{feedbackMsg}</p>
+                    </div>
+
+                    <div className={`fantasy-meter-wrapper ${inTargetZone ? 'in-sweet-spot' : ''}`}>
+                        <div className="meter-label">LỰC CÂU</div>
+                        <div className="meter-track">
+                            <div
+                                className="meter-target-zone"
+                                style={{
+                                    bottom: `${TARGET_MIN}%`,
+                                    height: `${TARGET_MAX - TARGET_MIN}%`
+                                }}
+                            >
+                                <svg viewBox="0 0 48 28" className="target-fish-svg">
+                                    <path
+                                        d="M6,14 C14,4 28,4 36,14 C40,9 45,6 46,6 C45,12 45,16 46,22 C45,22 40,19 36,14 C28,24 14,24 6,14 Z"
+                                        fill="#ffe57f"
+                                        stroke="#fff"
+                                        strokeWidth="1.2"
+                                    />
+                                    <circle cx="14" cy="12" r="1.8" fill="#3e2723" />
+                                </svg>
+                            </div>
+                            <div className="meter-fill-bar" style={{ height: `${power}%` }} />
+                        </div>
+                    </div>
+
+                    <div className="touch-controls-area">
+                        <button
+                            type="button"
+                            className={`hold-cast-button ${status === 'charging' ? 'is-charging' : ''}`}
+                            onPointerDown={(e) => {
+                                e.preventDefault();
+                                try {
+                                    e.currentTarget.setPointerCapture(e.pointerId);
+                                } catch (_) {}
+                                startCharging();
+                            }}
+                            onPointerUp={(e) => {
+                                e.preventDefault();
+                                try {
+                                    e.currentTarget.releasePointerCapture(e.pointerId);
+                                } catch (_) {}
+                                stopChargingAndEvaluate();
+                            }}
+                            onPointerCancel={() => stopChargingAndEvaluate()}
+                        >
+                            <span className="btn-glow-ring" />
+                            <span className="btn-text">
+                                {status === 'charging' ? 'THẢ TAY ĐỂ CHỐT LỰC!' : 'NHẤN & GIỮ ĐỂ CÂU CÁ'}
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // ================= 5. BIẾN HÌNH: CÁ -> KHỈ VÀNG XOAY 2 VÒNG -> PHONG THƯ =================
+        const TransformationSequence = ({ stage, onAdvanceStage }) => {
+            const containerRef = useRef(null);
+            const fishRef = useRef(null);
+            const splashRef = useRef(null);
+            const energySphereRef = useRef(null);
+            const monkeyRef = useRef(null);
+            const envelopePreviewRef = useRef(null);
+
+            useEffect(() => {
+                if (stage !== 'FISH_SUCCESS') return;
+
+                const tl = gsap.timeline();
+
+                // 1. Cá nhảy vọt lên khỏi mặt nước
+                tl.fromTo(
+                    splashRef.current,
+                    { scale: 0.2, opacity: 1, y: 140 },
+                    { scale: 1.5, opacity: 0, y: 70, duration: 0.95, ease: 'power2.out' }
+                );
+
+                tl.fromTo(
+                    fishRef.current,
+                    { x: -40, y: 190, scale: 0.35, rotation: -38, opacity: 0 },
+                    {
+                        x: 0,
+                        y: -25,
+                        scale: 1.15,
+                        rotation: 12,
+                        opacity: 1,
+                        duration: 1.25,
+                        ease: 'power2.out',
+                        onComplete: () => {
+                            onAdvanceStage('FISH_TRANSFORMATION');
+                            audioManager.playMagicChime();
+                        }
+                    },
+                    '<'
+                );
+
+                // 2. Cá phát sáng và biến hình thành Khỉ vàng
+                tl.to(energySphereRef.current, {
+                    scale: 1.8,
+                    opacity: 1,
+                    rotation: 180,
+                    duration: 0.55,
+                    ease: 'power2.inOut'
+                });
+
+                tl.to(
+                    fishRef.current,
+                    { scale: 0.1, opacity: 0, filter: 'brightness(3) blur(6px)', duration: 0.4 },
+                    '-=0.3'
+                );
+
+                tl.fromTo(
+                    monkeyRef.current,
+                    { scale: 0.2, opacity: 0, rotation: 0 },
+                    {
+                        scale: 1.15,
+                        opacity: 1,
+                        duration: 0.45,
+                        ease: 'back.out(1.7)',
+                        onComplete: () => onAdvanceStage('MONKEY_SPIN')
+                    },
+                    '-=0.2'
+                );
+
+                tl.to(energySphereRef.current, { scale: 0.9, opacity: 0.4, duration: 0.35 }, '<');
+
+                // 3. Khỉ lông vàng xoay 2 vòng (720 độ) trên không
+                tl.to(monkeyRef.current, {
+                    rotation: 720,
+                    y: -35,
+                    duration: 1.65,
+                    ease: 'power1.inOut',
+                    onComplete: () => {
+                        onAdvanceStage('ENVELOPE_TRANSFORMATION');
+                        audioManager.playMagicChime();
+                    }
+                });
+
+                // 4. Biến hình thành phong thư huyền ảo
+                tl.to(energySphereRef.current, {
+                    scale: 2.2,
+                    opacity: 1,
+                    duration: 0.45,
+                    ease: 'power2.in'
+                });
+
+                tl.to(monkeyRef.current, { scale: 0.15, opacity: 0, duration: 0.4, ease: 'power2.in' }, '<');
+
+                tl.fromTo(
+                    envelopePreviewRef.current,
+                    { scale: 0.2, opacity: 0, rotation: -15 },
+                    { scale: 1, opacity: 1, rotation: 0, duration: 0.85, ease: 'back.out(1.4)' },
+                    '-=0.15'
+                );
+
+                tl.to(energySphereRef.current, { scale: 0.2, opacity: 0, duration: 0.5 }, '-=0.6');
+
+                tl.to(envelopePreviewRef.current, {
+                    y: 0,
+                    duration: 0.45,
+                    onComplete: () => onAdvanceStage('LETTER_OPENING')
+                });
+
+                return () => tl.kill();
+            }, []);
+
+            return (
+                <div ref={containerRef} className="transformation-stage-layer">
+                    <div ref={splashRef} className="water-splash-droplets">
+                        <svg viewBox="0 0 220 140" className="splash-svg">
+                            <circle cx="45" cy="70" r="6" fill="#fff7d6" />
+                            <circle cx="80" cy="35" r="8" fill="#a8e6ff" />
+                            <circle cx="110" cy="20" r="5" fill="#ffffff" />
+                            <circle cx="145" cy="40" r="7" fill="#a8e6ff" />
+                            <circle cx="175" cy="75" r="6" fill="#fff7d6" />
+                        </svg>
+                    </div>
+
+                    <div ref={energySphereRef} className="golden-magic-aura" />
+
+                    {/* Cá Chép Vàng */}
+                    <div ref={fishRef} className="morph-actor fish-actor">
+                        <svg viewBox="0 0 220 150" className="custom-creature-svg">
+                            <defs>
+                                <linearGradient id="goldenFishGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#fff3b0" />
+                                    <stop offset="45%" stopColor="#ffae34" />
+                                    <stop offset="100%" stopColor="#d95918" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M85,48 Q115,15 148,45 Z" fill="#ff7b29" opacity="0.9" />
+                            <path d="M95,102 Q115,130 135,100 Z" fill="#ff7b29" opacity="0.9" />
+                            <path d="M155,75 C185,35 208,30 212,48 C205,68 195,75 212,102 C205,120 185,112 155,75 Z" fill="url(#goldenFishGrad)" />
+                            <path d="M22,75 C45,32 125,35 162,75 C125,115 45,118 22,75 Z" fill="url(#goldenFishGrad)" stroke="#fff7c2" strokeWidth="2" />
+                            <path d="M68,62 Q78,75 68,88 M92,58 Q104,75 92,92 M118,62 Q128,75 118,88" stroke="#fff3b0" strokeWidth="2" fill="none" opacity="0.75" />
+                            <circle cx="46" cy="68" r="6" fill="#ffffff" />
+                            <circle cx="44" cy="68" r="3.2" fill="#1a0f0a" />
+                        </svg>
+                    </div>
+
+                    {/* Khỉ Lông Vàng */}
+                    <div ref={monkeyRef} className="morph-actor monkey-actor">
+                        <svg viewBox="0 0 220 220" className="custom-creature-svg">
+                            <defs>
+                                <radialGradient id="goldenFurGrad" cx="50%" cy="45%" r="55%">
+                                    <stop offset="0%" stopColor="#ffe885" />
+                                    <stop offset="65%" stopColor="#f59e0b" />
+                                    <stop offset="100%" stopColor="#b45309" />
+                                </radialGradient>
+                            </defs>
+                            <path d="M138,155 C185,165 198,110 172,92 C156,82 148,98 162,106" stroke="url(#goldenFurGrad)" strokeWidth="12" strokeLinecap="round" fill="none" />
+                            <circle cx="62" cy="82" r="16" fill="url(#goldenFurGrad)" />
+                            <circle cx="62" cy="82" r="10" fill="#fed7aa" />
+                            <circle cx="158" cy="82" r="16" fill="url(#goldenFurGrad)" />
+                            <circle cx="158" cy="82" r="10" fill="#fed7aa" />
+                            <ellipse cx="110" cy="142" rx="34" ry="38" fill="url(#goldenFurGrad)" />
+                            <ellipse cx="110" cy="145" rx="22" ry="25" fill="#fde68a" />
+                            <path d="M82,125 Q52,102 48,122" stroke="url(#goldenFurGrad)" strokeWidth="13" strokeLinecap="round" fill="none" />
+                            <path d="M138,125 Q168,102 172,122" stroke="url(#goldenFurGrad)" strokeWidth="13" strokeLinecap="round" fill="none" />
+                            <path d="M92,174 Q75,195 66,184" stroke="url(#goldenFurGrad)" strokeWidth="13" strokeLinecap="round" fill="none" />
+                            <path d="M128,174 Q145,195 154,184" stroke="url(#goldenFurGrad)" strokeWidth="13" strokeLinecap="round" fill="none" />
+                            <circle cx="110" cy="82" r="38" fill="url(#goldenFurGrad)" />
+                            <path d="M98,46 Q110,28 122,46 Q115,38 110,45 Z" fill="#fde047" />
+                            <path d="M82,78 C82,60 110,64 110,74 C110,64 138,60 138,78 C138,98 126,110 110,110 C94,110 82,98 82,78 Z" fill="#ffedd5" />
+                            <circle cx="97" cy="80" r="5.5" fill="#271206" />
+                            <circle cx="95" cy="78" r="2" fill="#ffffff" />
+                            <circle cx="123" cy="80" r="5.5" fill="#271206" />
+                            <circle cx="121" cy="78" r="2" fill="#ffffff" />
+                            <ellipse cx="110" cy="89" rx="4" ry="2.5" fill="#9a3412" />
+                            <path d="M98,96 Q110,106 122,96" stroke="#9a3412" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                        </svg>
+                    </div>
+
+                    {/* Hộp phong thư */}
+                    <div ref={envelopePreviewRef} className="morph-actor envelope-preview-actor">
+                        <div className="glowing-envelope-box">
+                            <div className="wax-seal-blue-clock" />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ================= 6. PHONG THƯ MỞ 3D & LÁ THƯ CỔ =================
+        const MagicEnvelopeAndLetter = ({
+            stage,
+            onAdvanceStage,
+            onTriggerFireworks
+        }) => {
+            const sceneRef = useRef(null);
+            const rig3DRef = useRef(null);
+            const envelopeShellRef = useRef(null);
+            const topFlapRef = useRef(null);
+            const innerGlowRef = useRef(null);
+            const waxSealRef = useRef(null);
+            const sealGearRef = useRef(null);
+            const leftCordRef = useRef(null);
+            const rightCordRef = useRef(null);
+
+            // Ref cho tờ giấy và các nếp gấp 3D
+            const letterCarrierRef = useRef(null);
+            const topFoldRef = useRef(null);
+            const bottomFoldRef = useRef(null);
+
+            const [isFullyOpened, setIsFullyOpened] = useState(false);
+
+            // Tạo sẵn 28 hạt bụi phép thuật vàng để bung nổ khi con dấu sáp tan biến
+            const sealSparks = useMemo(() => {
+                return Array.from({ length: 28 }).map((_, i) => {
+                    const angle = (Math.PI * 2 * i) / 28 + (Math.random() - 0.5) * 0.25;
+                    const distance = 65 + Math.random() * 95;
+                    return {
+                        id: i,
+                        tx: Math.cos(angle) * distance,
+                        ty: Math.sin(angle) * distance,
+                        size: 3 + Math.random() * 5,
+                        delay: Math.random() * 0.12
+                    };
+                });
+            }, []);
+
+            useEffect(() => {
+                if (stage !== 'LETTER_OPENING') return;
+
+                const ctx = gsap.context(() => {
+                    const tl = gsap.timeline({
+                        defaults: { ease: 'power3.inOut' }
+                    });
+
+                    // Thiết lập trạng thái khởi đầu: Phong thư đóng kín, giấy nằm gọn bên trong túi thư (zIndex = 2)
+                    gsap.set(rig3DRef.current, {
+                        scale: 0.45,
+                        rotationX: 32,
+                        rotationY: -28,
+                        rotationZ: -8,
+                        z: -350,
+                        opacity: 0
+                    });
+                    gsap.set(topFlapRef.current, { rotationX: 0, zIndex: 6 });
+                    gsap.set(letterCarrierRef.current, {
+                        y: 28,
+                        scaleX: 0.86,
+                        scaleY: 0.44,
+                        z: 2,
+                        zIndex: 2,
+                        opacity: 1
+                    });
+                    gsap.set(topFoldRef.current, { rotationX: -85 });
+                    gsap.set(bottomFoldRef.current, { rotationX: 85 });
+                    gsap.set('.letter-stagger-line', { opacity: 0, y: 16, filter: 'blur(4px)' });
+
+                    // BƯỚC 1: Phong thư bay lượn 3D từ không gian vào giữa màn hình và nghiêng đón sáng
+                    tl.to(rig3DRef.current, {
+                        scale: 1,
+                        rotationX: 8,
+                        rotationY: 12,
+                        rotationZ: 2,
+                        z: 0,
+                        opacity: 1,
+                        duration: 1.35,
+                        ease: 'power3.out'
+                    }).to(rig3DRef.current, {
+                        rotationX: 0,
+                        rotationY: 0,
+                        rotationZ: 0,
+                        duration: 0.75,
+                        ease: 'sine.inOut'
+                    });
+
+                    // BƯỚC 2: Bánh răng đồng hồ thiên văn xoay mở khóa -> Dây vàng rút mở -> Con dấu vỡ thành hạt sáng
+                    tl.to(
+                        sealGearRef.current,
+                        {
+                            rotation: 240,
+                            transformOrigin: '50% 50%',
+                            duration: 0.85,
+                            ease: 'back.inOut(1.6)',
+                            onStart: () => audioManager.playMagicChime()
+                        },
+                        '-=0.2'
+                    )
+                        .to(
+                            waxSealRef.current,
+                            {
+                                scale: 1.25,
+                                filter: 'brightness(1.85) drop-shadow(0 0 28px #ffd54f)',
+                                duration: 0.4,
+                                ease: 'power2.in'
+                            },
+                            '-=0.35'
+                        )
+                        // Rút 2 sợi dây thừng vàng chéo trên bìa thư
+                        .to(
+                            [leftCordRef.current, rightCordRef.current],
+                            {
+                                strokeDashoffset: 360,
+                                opacity: 0,
+                                duration: 0.55,
+                                ease: 'power2.inOut'
+                            },
+                            '<'
+                        )
+                        // Bung nổ 28 hạt bụi vàng từ tâm con dấu
+                        .fromTo(
+                            '.seal-spark-particle',
+                            { x: 0, y: 0, scale: 0, opacity: 1 },
+                            {
+                                x: (i) => sealSparks[i].tx,
+                                y: (i) => sealSparks[i].ty,
+                                scale: 1.2,
+                                opacity: 0,
+                                duration: 0.85,
+                                stagger: 0.008,
+                                ease: 'power3.out'
+                            },
+                            '-=0.15'
+                        )
+                        .to(
+                            waxSealRef.current,
+                            {
+                                scale: 0,
+                                opacity: 0,
+                                duration: 0.28,
+                                ease: 'back.in(2)'
+                            },
+                            '<'
+                        );
+
+                    // BƯỚC 3: Nắp phong thư mở lật 3D (Từ 0 -> 90 độ giữ zIndex 6, từ 90 -> 180 độ hạ zIndex xuống 1)
+                    tl.to(
+                        topFlapRef.current,
+                        {
+                            rotationX: 90,
+                            duration: 0.48,
+                            ease: 'power2.in',
+                            onComplete: () => {
+                                // Đổi zIndex ngay điểm 90 độ để tờ giấy khi rút lên sẽ nằm đè lên mặt trong của nắp thư
+                                gsap.set(topFlapRef.current, { zIndex: 1 });
+                            }
+                        },
+                        '-=0.45'
+                    )
+                        .to(topFlapRef.current, {
+                            rotationX: 180,
+                            duration: 0.58,
+                            ease: 'back.out(1.4)'
+                        })
+                        // Ánh sáng vàng dịu từ bên trong túi thư bừng lên
+                        .to(
+                            innerGlowRef.current,
+                            {
+                                opacity: 1,
+                                scale: 1.25,
+                                duration: 0.65,
+                                ease: 'power2.out'
+                            },
+                            '-=0.8'
+                        );
+
+                    // BƯỚC 4: Rút tờ giấy trượt từ trong túi phong thư lên cao (Lúc này giấy vẫn kẹp sau túi trước zIndex = 4)
+                    tl.to(
+                        letterCarrierRef.current,
+                        {
+                            y: -235,
+                            scaleY: 0.68,
+                            rotationZ: -1.5,
+                            duration: 1.05,
+                            ease: 'power3.inOut',
+                            onStart: () => audioManager.playMagicChime()
+                        },
+                        '-=0.25'
+                    );
+
+                    // BƯỚC 5: Chuyển lớp Z-Index đưa tờ giấy ra tiền cảnh & Đẩy vỏ phong thư lùi xuống hậu cảnh
+                    tl.add(() => {
+                        gsap.set(letterCarrierRef.current, { zIndex: 15 });
+                    })
+                        .to(
+                            envelopeShellRef.current,
+                            {
+                                y: 165,
+                                z: -160,
+                                rotationX: 22,
+                                scale: 0.82,
+                                opacity: 0.42,
+                                duration: 1.1,
+                                ease: 'power3.inOut'
+                            },
+                            '+=0.05'
+                        )
+                        // Đồng thời đưa tờ giấy về chính giữa màn hình và bung rộng kích thước
+                        .to(
+                            letterCarrierRef.current,
+                            {
+                                y: 0,
+                                z: 40,
+                                rotationZ: 0,
+                                scaleX: 1,
+                                scaleY: 1,
+                                duration: 1.15,
+                                ease: 'power3.out'
+                            },
+                            '<'
+                        )
+                        // BƯỚC 6: Mở phẳng các nếp gấp giấy 3D
+                        .to(
+                            [topFoldRef.current, bottomFoldRef.current],
+                            {
+                                rotationX: 0,
+                                duration: 0.95,
+                                ease: 'back.out(1.2)'
+                            },
+                            '-=0.85'
+                        );
+
+                    // BƯỚC 7: Từng dòng chữ lời chúc buổi chiều và nút xác nhận hiện lên mượt mà
+                    tl.to(
+                        '.letter-stagger-line',
+                        {
+                            opacity: 1,
+                            y: 0,
+                            filter: 'blur(0px)',
+                            duration: 0.7,
+                            stagger: 0.25,
+                            ease: 'power2.out',
+                            onComplete: () => {
+                                setIsFullyOpened(true);
+                                onAdvanceStage('LETTER_READ');
+                            }
+                        },
+                        '-=0.3'
+                    );
+                }, sceneRef);
+
+                return () => ctx.revert();
+            }, [stage, sealSparks]);
+
+            const handleConfirmRead = () => {
+                if (!isFullyOpened) return;
+                if (navigator.vibrate) navigator.vibrate(40);
+                setIsFullyOpened(false);
+                onTriggerFireworks();
+            };
+
+            return (
+                <div
+                    ref={sceneRef}
+                    className={`magic-letter-viewport ${
+                        stage === 'COCONUT_FIREWORKS' || stage === 'ENDING' ? 'is-celebrating-mode' : ''
+                    }`}
+                >
+                    <div ref={rig3DRef} className="letter-3d-rig">
+                        {/* ================= KHỐI VỎ PHONG THƯ 3D (ENVELOPE SHELL) ================= */}
+                        <div ref={envelopeShellRef} className="envelope-shell-3d">
+                            {/* 1. Mặt lưng trong của phong thư (z-index: 1) */}
+                            <div className="envelope-back-plate" />
+
+                            {/* 2. Luồng sáng phép thuật phát ra từ lòng phong thư (z-index: 2) */}
+                            <div ref={innerGlowRef} className="envelope-inner-magic-glow" />
+
+                            {/* 3. Hai vạt gấp chéo hai bên và túi trước của phong thư (z-index: 4 - Che tờ giấy khi đang rút) */}
+                            <div className="envelope-pocket-front">
+                                <svg viewBox="0 0 440 280" className="pocket-svg" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="leftFlapGrad" x1="0" y1="0" x2="1" y2="1">
+                                            <stop offset="0%" stopColor="#f3dfb9" />
+                                            <stop offset="55%" stopColor="#d1ad72" />
+                                            <stop offset="100%" stopColor="#9c7538" />
+                                        </linearGradient>
+                                        <linearGradient id="rightFlapGrad" x1="1" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#f3dfb9" />
+                                            <stop offset="55%" stopColor="#c8a165" />
+                                            <stop offset="100%" stopColor="#946d30" />
+                                        </linearGradient>
+                                        <linearGradient id="bottomFlapGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+                                            <stop offset="0%" stopColor="#f9e8c8" />
+                                            <stop offset="45%" stopColor="#dfc088" />
+                                            <stop offset="100%" stopColor="#ad8344" />
+                                        </linearGradient>
+                                    </defs>
+
+                                    {/* Vạt gấp bên trái */}
+                                    <polygon
+                                        points="0,0 220,150 0,280"
+                                        fill="url(#leftFlapGrad)"
+                                        stroke="#ffe599"
+                                        strokeWidth="1.2"
+                                    />
+                                    {/* Vạt gấp bên phải */}
+                                    <polygon
+                                        points="440,0 220,150 440,280"
+                                        fill="url(#rightFlapGrad)"
+                                        stroke="#ffe599"
+                                        strokeWidth="1.2"
+                                    />
+                                    {/* Vạt gấp đáy phong thư */}
+                                    <polygon
+                                        points="0,280 220,132 440,280"
+                                        fill="url(#bottomFlapGrad)"
+                                        stroke="#ffecb3"
+                                        strokeWidth="1.5"
+                                    />
+                                </svg>
+                            </div>
+
+                            {/* 4. Nắp trên của phong thư có 2 mặt Trước/Sau lật 3D (Bắt đầu ở z-index: 6) */}
+                            <div ref={topFlapRef} className="envelope-top-flap-3d">
+                                {/* Mặt ngoài nắp thư (Khi đang đóng) */}
+                                <div className="flap-face flap-outer-face">
+                                    <svg viewBox="0 0 440 165" className="flap-svg" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="topOuterGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+                                                <stop offset="0%" stopColor="#e3c387" />
+                                                <stop offset="65%" stopColor="#f8e6c2" />
+                                                <stop offset="100%" stopColor="#c79b56" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path
+                                            d="M0,0 L440,0 L236,154 Q220,165 204,154 Z"
+                                            fill="url(#topOuterGrad)"
+                                            stroke="#ffe699"
+                                            strokeWidth="2"
+                                        />
+                                    </svg>
+                                </div>
+
+                                {/* Mặt lót bên trong nắp thư (Hiện ra khi lật mở 180 độ) */}
+                                <div className="flap-face flap-inner-face">
+                                    <svg viewBox="0 0 440 165" className="flap-svg" preserveAspectRatio="none">
+                                        <defs>
+                                            <linearGradient id="topInnerGrad" x1="0.5" y1="1" x2="0.5" y2="0">
+                                                <stop offset="0%" stopColor="#b88d48" />
+                                                <stop offset="100%" stopColor="#ebd3a7" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path
+                                            d="M0,0 L440,0 L236,154 Q220,165 204,154 Z"
+                                            fill="url(#topInnerGrad)"
+                                            stroke="#ffd54f"
+                                            strokeWidth="1.5"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* 5. Hai sợi dây thừng vàng kim buộc chéo (Bám sát Ảnh mẫu 1) */}
+                            <svg viewBox="0 0 440 280" className="golden-cords-svg">
+                                <path
+                                    ref={leftCordRef}
+                                    d="M175,0 L220,142 L205,280"
+                                    stroke="#d4af37"
+                                    strokeWidth="4.5"
+                                    strokeDasharray="360"
+                                    strokeDashoffset="0"
+                                    fill="none"
+                                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.6))"
+                                />
+                                <path
+                                    ref={rightCordRef}
+                                    d="M265,0 L220,142 L235,280"
+                                    stroke="#ffd54f"
+                                    strokeWidth="4"
+                                    strokeDasharray="360"
+                                    strokeDashoffset="0"
+                                    fill="none"
+                                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.6))"
+                                />
+                            </svg>
+
+                            {/* 6. Con dấu sáp xanh lam chạm bánh răng đồng hồ thiên văn + Hạt bụi vàng */}
+                            <div className="wax-seal-anchor">
+                                {/* Hệ thống hạt sáng nổ ra khi mở phong ấn */}
+                                <div className="seal-sparks-container">
+                                    {sealSparks.map((sp) => (
+                                        <span
+                                            key={sp.id}
+                                            className="seal-spark-particle"
+                                            style={{ width: `${sp.size}px`, height: `${sp.size}px` }}
+                                        />
+                                    ))}
+                                </div>
+
+                                <div ref={waxSealRef} className="celestial-wax-seal-3d">
+                                    <svg viewBox="0 0 110 110" className="wax-seal-detail-svg">
+                                        <defs>
+                                            <radialGradient id="blueWaxGrad" cx="35%" cy="30%" r="70%">
+                                                <stop offset="0%" stopColor="#4fc3f7" />
+                                                <stop offset="45%" stopColor="#1565c0" />
+                                                <stop offset="85%" stopColor="#0d2b52" />
+                                                <stop offset="100%" stopColor="#07172e" />
+                                            </radialGradient>
+                                        </defs>
+                                        {/* Viền sáp lượn sóng tự nhiên */}
+                                        <path
+                                            d="M55,6 C68,6 74,14 85,19 C96,24 103,35 103,48 C103,61 98,71 91,82 C84,93 70,103 55,103 C40,103 27,94 19,83 C11,72 7,61 7,48 C7,35 15,24 26,18 C37,12 42,6 55,6 Z"
+                                            fill="url(#blueWaxGrad)"
+                                            stroke="#90caf9"
+                                            strokeWidth="2"
+                                        />
+                                        <circle cx="55" cy="55" r="34" fill="#0a1e3c" stroke="#f59e0b" strokeWidth="2.2" />
+
+                                        {/* Nhóm bánh răng & kim đồng hồ vàng xoay khi mở khóa */}
+                                        <g ref={sealGearRef}>
+                                            <circle
+                                                cx="55"
+                                                cy="55"
+                                                r="28"
+                                                fill="none"
+                                                stroke="#fbbf24"
+                                                strokeWidth="4"
+                                                strokeDasharray="6 4"
+                                            />
+                                            <circle cx="55" cy="55" r="20" fill="none" stroke="#fde047" strokeWidth="1.4" />
+                                            <line x1="55" y1="55" x2="55" y2="31" stroke="#fef08a" strokeWidth="2.8" strokeLinecap="round" />
+                                            <line x1="55" y1="55" x2="72" y2="55" stroke="#fde047" strokeWidth="2.2" strokeLinecap="round" />
+                                            <circle cx="55" cy="55" r="4.5" fill="#fef08a" />
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ================= TỜ GIẤY THƯ ĐƯỢC RÚT LÊN & MỞ NẾP GẤP 3D ================= */}
+                        <div ref={letterCarrierRef} className="letter-sheet-carrier">
+                            <div className="parchment-paper-card">
+                                {/* Nếp gấp 3D phía trên */}
+                                <div ref={topFoldRef} className="paper-fold-panel top-fold-wing" />
+
+                                {/* Khung viền trang trí hoa văn miền Tây & Nội dung bức thư */}
+                                <div className="parchment-ornate-frame">
+                                    {/* Hoa văn góc giấy */}
+                                    <span className="corner-ornament tl" />
+                                    <span className="corner-ornament tr" />
+                                    <span className="corner-ornament bl" />
+                                    <span className="corner-ornament br" />
+
+                                    <div className="letter-stagger-line letter-crest-header">
+                                        ✦ Lá Thư Chiều Đồng Tháp ✦
+                                    </div>
+
+                                    <div className="letter-scroll-body">
+                                        {DEFAULT_LETTER_CONTENT.paragraphs.map((text, index) => (
+                                            <p key={index} className="letter-stagger-line letter-paragraph">
+                                                {text}
+                                            </p>
+                                        ))}
+
+                                        <p className="letter-stagger-line letter-signature-line">
+                                            {DEFAULT_LETTER_CONTENT.signature}
+                                        </p>
+                                    </div>
+
+                                    <div className="letter-stagger-line letter-action-footer">
+                                        <button
+                                            type="button"
+                                            disabled={!isFullyOpened}
+                                            onClick={handleConfirmRead}
+                                            className={`confirm-read-luxury-btn ${isFullyOpened ? 'is-interactive' : ''}`}
+                                        >
+                                            <span>Đã đọc thư</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Nếp gấp 3D phía dưới */}
+                                <div ref={bottomFoldRef} className="paper-fold-panel bottom-fold-wing" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ================= 7. MƯA DỪA XANH & PHÁO HOA BÙNG NỔ 5 GIÂY =================
+        const FIREWORK_COLORS = ['#ff3366', '#fde047', '#4ade80', '#22d3ee', '#fb923c', '#e879f9', '#ffffff', '#ffd700'];
+
+        const CoconutFireworksCanvas = ({ stage, onAdvanceStage, onRestartStory }) => {
+            const canvasRef = useRef(null);
+
+            useEffect(() => {
+                if (stage !== 'COCONUT_FIREWORKS' && stage !== 'ENDING') return;
+
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                const handleResize = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                };
+                handleResize();
+                window.addEventListener('resize', handleResize);
+
+                const coconuts = [];
+                const particles = [];
+                const rockets = [];
+                const startTime = performance.now();
+                const FIREWORKS_DURATION = 5000;
+                let finishedTriggered = false;
+
+                // Hàm nổ pháo hoa tại tọa độ (x, y)
+                const explodeFirework = (x, y, count = 48, baseColor = null) => {
+                    audioManager.playFireworkPop();
+                    const chosenColor = baseColor || FIREWORK_COLORS[Math.floor(Math.random() * FIREWORK_COLORS.length)];
+                    for (let i = 0; i < count; i++) {
+                        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.35;
+                        const speed = 2.5 + Math.random() * 6.5;
+                        particles.push({
+                            x,
+                            y,
+                            vx: Math.cos(angle) * speed,
+                            vy: Math.sin(angle) * speed,
+                            color: Math.random() < 0.25 ? '#ffffff' : chosenColor,
+                            alpha: 1,
+                            decay: 0.014 + Math.random() * 0.012,
+                            size: 2.5 + Math.random() * 3.5,
+                            isStar: i % 4 === 0
+                        });
+                    }
+                };
+
+                // Bắn tên lửa pháo hoa từ dưới mặt sông vút lên trời
+                const launchRocket = (targetX = null, targetY = null) => {
+                    const tx = targetX !== null ? targetX : canvas.width * (0.2 + Math.random() * 0.6);
+                    const ty = targetY !== null ? targetY : canvas.height * (0.18 + Math.random() * 0.32);
+                    rockets.push({
+                        x: tx + (Math.random() - 0.5) * 60,
+                        y: canvas.height + 20,
+                        targetY: ty,
+                        vy: -(9 + Math.random() * 4),
+                        vx: (tx - (tx + (Math.random() - 0.5) * 60)) * 0.02,
+                        color: FIREWORK_COLORS[Math.floor(Math.random() * FIREWORK_COLORS.length)],
+                        trail: []
+                    });
+                };
+
+                // Thả quả dừa xanh rơi
+                const spawnCoconut = (initialY = -50) => {
+                    const centerX = canvas.width * 0.5;
+                    const spread = Math.min(canvas.width * 0.78, 720);
+                    coconuts.push({
+                        x: centerX + (Math.random() - 0.5) * spread,
+                        y: initialY,
+                        vx: (Math.random() - 0.5) * 1.6,
+                        vy: 3.4 + Math.random() * 2.4,
+                        rotation: Math.random() * Math.PI * 2,
+                        vRot: (Math.random() - 0.5) * 0.1,
+                        targetY: canvas.height * (0.28 + Math.random() * 0.42),
+                        scale: 0.78 + Math.random() * 0.42
+                    });
+                };
+
+                // BÙNG NỔ NGAY LẬP TỨC KHI VỪA ẤN ĐÃ ĐỌC THƯ: 5 chùm pháo hoa rực rỡ + quả dừa rơi ngay
+                explodeFirework(canvas.width * 0.5, canvas.height * 0.28, 60, '#fde047');
+                setTimeout(() => explodeFirework(canvas.width * 0.3, canvas.height * 0.35, 52, '#22d3ee'), 120);
+                setTimeout(() => explodeFirework(canvas.width * 0.7, canvas.height * 0.32, 52, '#e879f9'), 240);
+                setTimeout(() => explodeFirework(canvas.width * 0.45, canvas.height * 0.42, 48, '#4ade80'), 380);
+                setTimeout(() => explodeFirework(canvas.width * 0.65, canvas.height * 0.22, 55, '#ff3366'), 520);
+
+                spawnCoconut(-30);
+                spawnCoconut(60);
+                spawnCoconut(120);
+                launchRocket(canvas.width * 0.35, canvas.height * 0.25);
+                launchRocket(canvas.width * 0.65, canvas.height * 0.22);
+
+                const drawGreenCoconut = (c) => {
+                    ctx.save();
+                    ctx.translate(c.x, c.y);
+                    ctx.rotate(c.rotation);
+                    ctx.scale(c.scale, c.scale);
+
+                    const grad = ctx.createRadialGradient(-6, -6, 3, 0, 0, 22);
+                    grad.addColorStop(0, '#a3e635');
+                    grad.addColorStop(0.6, '#4d7c0f');
+                    grad.addColorStop(1, '#1a2e05');
+
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, 18, 21, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#d97706';
+                    ctx.beginPath();
+                    ctx.arc(0, -19, 5, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.restore();
+                };
+
+                let lastSpawnTime = performance.now();
+                let lastRocketTime = performance.now();
+                let rafId;
+
+                const render = (now) => {
+                    const elapsed = now - startTime;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Liên tục thả dừa và bắn tên lửa pháo hoa trong suốt 5 giây
+                    if (elapsed < FIREWORKS_DURATION) {
+                        if (now - lastSpawnTime > 380 && coconuts.length < 8) {
+                            spawnCoconut(-40);
+                            lastSpawnTime = now;
+                        }
+                        if (now - lastRocketTime > 650) {
+                            launchRocket();
+                            lastRocketTime = now;
+                        }
+                    } else if (!finishedTriggered) {
+                        finishedTriggered = true;
+                        onAdvanceStage('ENDING');
+                    }
+
+                    // Cập nhật & vẽ tên lửa phóng lên
+                    for (let i = rockets.length - 1; i >= 0; i--) {
+                        const r = rockets[i];
+                        r.trail.push({ x: r.x, y: r.y, alpha: 1 });
+                        r.x += r.vx;
+                        r.y += r.vy;
+
+                        for (let t = r.trail.length - 1; t >= 0; t--) {
+                            const tr = r.trail[t];
+                            tr.alpha -= 0.08;
+                            if (tr.alpha <= 0) {
+                                r.trail.splice(t, 1);
+                                continue;
+                            }
+                            ctx.fillStyle = r.color;
+                            ctx.globalAlpha = tr.alpha;
+                            ctx.beginPath();
+                            ctx.arc(tr.x, tr.y, 2.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.globalAlpha = 1;
+
+                        ctx.fillStyle = '#ffffff';
+                        ctx.shadowColor = r.color;
+                        ctx.shadowBlur = 12;
+                        ctx.beginPath();
+                        ctx.arc(r.x, r.y, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+
+                        if (r.y <= r.targetY) {
+                            explodeFirework(r.x, r.y, 55, r.color);
+                            rockets.splice(i, 1);
+                        }
+                    }
+
+                    // Cập nhật & vẽ quả dừa rơi
+                    for (let i = coconuts.length - 1; i >= 0; i--) {
+                        const c = coconuts[i];
+                        c.x += c.vx;
+                        c.y += c.vy;
+                        c.vy += 0.12;
+                        c.rotation += c.vRot;
+
+                        drawGreenCoconut(c);
+
+                        if (c.y >= c.targetY) {
+                            explodeFirework(c.x, c.y, 44, '#fde047');
+                            coconuts.splice(i, 1);
+                        }
+                    }
+
+                    // Cập nhật & vẽ hạt sáng pháo hoa
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        const p = particles[i];
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vx *= 0.96;
+                        p.vy = p.vy * 0.96 + 0.09;
+                        p.alpha -= p.decay;
+
+                        if (p.alpha <= 0) {
+                            particles.splice(i, 1);
+                            continue;
+                        }
+
+                        ctx.save();
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.shadowColor = p.color;
+                        ctx.shadowBlur = 10;
+
+                        if (p.isStar) {
+                            ctx.translate(p.x, p.y);
+                            ctx.beginPath();
+                            for (let s = 0; s < 4; s++) {
+                                ctx.lineTo(Math.cos((s * Math.PI) / 2) * (p.size * 2.2), Math.sin((s * Math.PI) / 2) * (p.size * 2.2));
+                                ctx.lineTo(
+                                    Math.cos(((s + 0.5) * Math.PI) / 2) * (p.size * 0.7),
+                                    Math.sin(((s + 0.5) * Math.PI) / 2) * (p.size * 0.7)
+                                );
+                            }
+                            ctx.closePath();
+                            ctx.fill();
+                        } else {
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.restore();
+                    }
+
+                    rafId = requestAnimationFrame(render);
+                };
+
+                rafId = requestAnimationFrame(render);
+
+                return () => {
+                    window.removeEventListener('resize', handleResize);
+                    cancelAnimationFrame(rafId);
+                };
+            }, [stage]);
+
+            return (
+                <div className="coconut-fireworks-layer">
+                    <canvas ref={canvasRef} className="fireworks-canvas" />
+
+                    {stage === 'ENDING' && (
+                        <div className="ending-celebration-modal">
+                            <h2 className="ending-title">“Chúc bạn một buổi chiều thật nhiều niềm vui!”</h2>
+                            <p className="ending-subtitle">
+                                Cảm ơn bạn đã ghé thăm miền sông nước Đồng Tháp huyền ảo.
+                            </p>
+                            <button type="button" onClick={onRestartStory} className="restart-story-btn">
+                                Trải nghiệm lại từ đầu
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ================= 8. MAIN APP COMPONENT =================
+        const App = () => {
+            const [stage, setStage] = useState('GALAXY');
+            const [fishingStatus, setFishingStatus] = useState('idle');
+            const [power, setPower] = useState(0);
+            const [soundEnabled, setSoundEnabled] = useState(true);
+            const [storyKey, setStoryKey] = useState(0);
+
+            useEffect(() => {
+                if (stage === 'RIVER_SCENE') {
+                    const timer = setTimeout(() => {
+                        setStage('FISHING');
+                    }, 1100);
+                    return () => clearTimeout(timer);
+                }
+            }, [stage]);
+
+            const handleToggleAudio = () => {
+                const active = audioManager.initAndToggle();
+                setSoundEnabled(active);
+            };
+
+            const handleRestartStory = () => {
+                setPower(0);
+                setFishingStatus('idle');
+                setStage('GALAXY');
+                setStoryKey((prev) => prev + 1);
+            };
+
+            const showRiverWorld = stage !== 'GALAXY';
+            const showTransformSequence =
+                stage === 'FISH_SUCCESS' ||
+                stage === 'FISH_TRANSFORMATION' ||
+                stage === 'MONKEY_SPIN' ||
+                stage === 'ENVELOPE_TRANSFORMATION';
+
+            // Giữ envelope và letter mounted trong COCONUT_FIREWORKS để chạy hiệu ứng mờ dần nhẹ nhàng
+            const showEnvelopeAndLetter =
+                stage === 'LETTER_OPENING' ||
+                stage === 'LETTER_READ' ||
+                stage === 'COCONUT_FIREWORKS' ||
+                stage === 'ENDING';
+
+            return (
+                <main key={storyKey} className="magical-story-viewport">
+                    <button
+                        type="button"
+                        onClick={handleToggleAudio}
+                        className="sound-toggle-pill"
+                        aria-label="Bật hoặc tắt âm thanh môi trường"
+                    >
+                        {soundEnabled ? 'Âm thanh: Bật' : 'Âm thanh: Tắt'}
+                    </button>
+
+                    <GalaxyAndDescentScene stage={stage} onAdvanceStage={setStage} />
+
+                    {showRiverWorld && (
+                        <DongThapRiverScene stage={stage} fishingStatus={fishingStatus} power={power} />
+                    )}
+
+                    {stage === 'FISHING' && (
+                        <FishingPowerMeter
+                            status={fishingStatus}
+                            power={power}
+                            setPower={setPower}
+                            onStatusChange={setFishingStatus}
+                            onSuccessCatch={() => {
+                                setTimeout(() => setStage('FISH_SUCCESS'), 350);
+                            }}
+                        />
+                    )}
+
+                    {showTransformSequence && (
+                        <TransformationSequence stage={stage} onAdvanceStage={setStage} />
+                    )}
+
+                    {showEnvelopeAndLetter && (
+                        <MagicEnvelopeAndLetter
+                            stage={stage}
+                            onAdvanceStage={setStage}
+                            onTriggerFireworks={() => setStage('COCONUT_FIREWORKS')}
+                        />
+                    )}
+
+                    {(stage === 'COCONUT_FIREWORKS' || stage === 'ENDING') && (
+                        <CoconutFireworksCanvas
+                            stage={stage}
+                            onAdvanceStage={setStage}
+                            onRestartStory={handleRestartStory}
+                        />
+                    )}
+                </main>
+            );
+        };
+
+        // Render React ứng dụng
+        const rootElement = document.getElementById('root');
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
