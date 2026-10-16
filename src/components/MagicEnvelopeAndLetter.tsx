@@ -463,7 +463,7 @@ export const MagicEnvelopeAndLetter: React.FC<Props> = ({
               <span className="corner-ornament br" />
 
               <div className="letter-stagger-line letter-crest-header">
-                ✦ Lá Thư Chiều Đồng Tháp ✦
+                ✦ Lá Thư Sáng Đồng Tháp ✦
               </div>
 
               <div className="letter-scroll-body">
